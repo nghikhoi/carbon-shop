@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/my-app}
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/carbon-shop}
     username: ${JDBC_DATABASE_USERNAME:postgres}
     password: ${JDBC_DATABASE_PASSWORD:<<YOUR_PASSWORD>>}
     hikari:
@@ -31,5 +31,13 @@ error:
       OrderOrderStatusIdUnique: ORDER_ORDER_STATUS_ID_UNIQUE
       OrderPaymentIdUnique: ORDER_PAYMENT_ID_UNIQUE
       OrderConstractIdUnique: ORDER_CONSTRACT_ID_UNIQUE
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
 springdoc:
   pathsToMatch: /, /api/**
