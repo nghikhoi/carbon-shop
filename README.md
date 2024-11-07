@@ -1,4 +1,4 @@
-# MyApp
+# CarbonShop
 
 This app was created with Bootify.io - tips on working with the code [can be found here](https://bootify.io/next-steps/).
 
@@ -16,9 +16,14 @@ Lombok must be supported by your IDE. For IntelliJ install the Lombok plugin and
 
 After starting the application it is accessible under `localhost:8080`.
 
+## Testing requirements
+
+Testcontainers is used for running the integration tests. Due
+to the reuse flag, the container will not shut down after the tests. It can be stopped manually if needed.
+
 ## Build
 
-The application can be built using the following command:
+The application can be tested and built using the following command:
 
 ```
 gradlew clean build
@@ -27,14 +32,14 @@ gradlew clean build
 Start your application with the following command - here with the profile `production`:
 
 ```
-java -Dspring.profiles.active=production -jar ./build/libs/my-app-0.0.1-SNAPSHOT.jar
+java -Dspring.profiles.active=production -jar ./build/libs/carbon-shop-0.0.1-SNAPSHOT.jar
 ```
 
 If required, a Docker image can be created with the Spring Boot plugin. Add `SPRING_PROFILES_ACTIVE=production` as
 environment variable when running the container.
 
 ```
-gradlew bootBuildImage --imageName=tradingcarbon/my-app
+gradlew bootBuildImage --imageName=uit/carbon-shop
 ```
 
 ## Further readings
