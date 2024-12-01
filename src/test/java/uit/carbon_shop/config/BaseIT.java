@@ -44,7 +44,7 @@ import uit.carbon_shop.repos.UserRepository;
 public abstract class BaseIT {
 
     @ServiceConnection
-    private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:17.0");
+    private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:17.1");
 
     static {
         postgreSQLContainer.withReuse(true)
