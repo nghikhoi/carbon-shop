@@ -1,1 +1,1 @@
-include 'carbon-shop-base', 'carbon-shop-web'
+rootProject.name = 'carbon-shop'
