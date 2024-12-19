@@ -9,7 +9,8 @@ When starting the application `docker compose up` is called and the app will con
 
 During development it is recommended to use the profile `local`. In IntelliJ `-Dspring.profiles.active=local` can be
 added in the VM options of the Run Configuration after enabling this property in "Modify options". Create your own
-`application-local.yml` file to override settings for development.
+`application-local.yml` file to override settings for development. For this multi-module
+project you have to select the highest module `carbon-shop-web.main` as the classpath.
 
 Lombok must be supported by your IDE. For IntelliJ install the Lombok plugin and enable annotation processing -
 [learn more](https://bootify.io/next-steps/spring-boot-with-lombok.html).
@@ -32,7 +33,7 @@ gradlew clean build
 Start your application with the following command - here with the profile `production`:
 
 ```
-java -Dspring.profiles.active=production -jar ./build/libs/carbon-shop-0.0.1-SNAPSHOT.jar
+java -Dspring.profiles.active=production -jar ./carbon-shop-web/build/libs/carbon-shop-web-0.0.1-SNAPSHOT.jar
 ```
 
 If required, a Docker image can be created with the Spring Boot plugin. Add `SPRING_PROFILES_ACTIVE=production` as
