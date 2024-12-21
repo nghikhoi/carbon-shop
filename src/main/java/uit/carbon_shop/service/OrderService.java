@@ -1,19 +1,61 @@
 package uit.carbon_shop.service;
 
 import java.util.List;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import uit.carbon_shop.domain.Order;
 import uit.carbon_shop.model.OrderDTO;
+import uit.carbon_shop.repos.AppUserRepository;
+import uit.carbon_shop.repos.OrderRepository;
+import uit.carbon_shop.repos.ProjectRepository;
+import uit.carbon_shop.util.NotFoundException;
 
 
-public interface OrderService {
+@Service
+public class OrderService {
 
-    List<OrderDTO> findAll();
+    private final OrderRepository orderRepository;
+    private final ProjectRepository projectRepository;
+    private final AppUserRepository appUserRepository;
+    private final OrderMapper orderMapper;
 
-    OrderDTO get(Long orderId);
+    public OrderService(final OrderRepository orderRepository,
+            final ProjectRepository projectRepository, final AppUserRepository appUserRepository,
+            final OrderMapper orderMapper) {
+        this.orderRepository = orderRepository;
+        this.projectRepository = projectRepository;
+        this.appUserRepository = appUserRepository;
+        this.orderMapper = orderMapper;
+    }
 
-    Long create(OrderDTO orderDTO);
+    public List<OrderDTO> findAll() {
+        final List<Order> orders = orderRepository.findAll(Sort.by("orderId"));
+        return orders.stream()
+                .map(order -> orderMapper.updateOrderDTO(order, new OrderDTO()))
+                .toList();
+    }
 
-    void update(Long orderId, OrderDTO orderDTO);
+    public OrderDTO get(final Long orderId) {
+        return orderRepository.findById(orderId)
+                .map(order -> orderMapper.updateOrderDTO(order, new OrderDTO()))
+                .orElseThrow(NotFoundException::new);
+    }
 
-    void delete(Long orderId);
+    public Long create(final OrderDTO orderDTO) {
+        final Order order = new Order();
+        orderMapper.updateOrder(orderDTO, order, projectRepository, appUserRepository, appUserRepository);
+        return orderRepository.save(order).getOrderId();
+    }
+
+    public void update(final Long orderId, final OrderDTO orderDTO) {
+        final Order order = orderRepository.findById(orderId)
+                .orElseThrow(NotFoundException::new);
+        orderMapper.updateOrder(orderDTO, order, projectRepository, appUserRepository, appUserRepository);
+        orderRepository.save(order);
+    }
+
+    public void delete(final Long orderId) {
+        orderRepository.deleteById(orderId);
+    }
 
 }

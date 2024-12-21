@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import uit.carbon_shop.domain.AppUser;
+import uit.carbon_shop.domain.Company;
 import uit.carbon_shop.domain.Project;
 
 
@@ -18,6 +19,8 @@ public interface AppUserRepository extends JpaRepository<AppUser, UUID> {
     Page<AppUser> findAllByUserId(UUID userId, Pageable pageable);
 
     boolean existsByEmailIgnoreCase(String email);
+
+    AppUser findFirstByCompany(Company company);
 
     AppUser findFirstByFavoriteProjects(Project project);
 
