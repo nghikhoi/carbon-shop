@@ -1,4 +1,4 @@
-INSERT INTO users (
+INSERT INTO app_users (
     user_id,
     password,
     name,
@@ -18,7 +18,7 @@ INSERT INTO users (
     '2024-09-02 14:30:00'
 );
 
-INSERT INTO users (
+INSERT INTO app_users (
     user_id,
     password,
     name,

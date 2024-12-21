@@ -5,9 +5,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uit.carbon_shop.domain.Order;
 import uit.carbon_shop.model.OrderDTO;
+import uit.carbon_shop.repos.AppUserRepository;
 import uit.carbon_shop.repos.OrderRepository;
 import uit.carbon_shop.repos.ProjectRepository;
-import uit.carbon_shop.repos.UserRepository;
 import uit.carbon_shop.util.NotFoundException;
 
 
@@ -16,15 +16,15 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
     private final OrderMapper orderMapper;
 
     public OrderServiceImpl(final OrderRepository orderRepository,
-            final ProjectRepository projectRepository, final UserRepository userRepository,
+            final ProjectRepository projectRepository, final AppUserRepository appUserRepository,
             final OrderMapper orderMapper) {
         this.orderRepository = orderRepository;
         this.projectRepository = projectRepository;
-        this.userRepository = userRepository;
+        this.appUserRepository = appUserRepository;
         this.orderMapper = orderMapper;
     }
 
@@ -46,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Long create(final OrderDTO orderDTO) {
         final Order order = new Order();
-        orderMapper.updateOrder(orderDTO, order, projectRepository, userRepository, userRepository);
+        orderMapper.updateOrder(orderDTO, order, projectRepository, appUserRepository, appUserRepository);
         return orderRepository.save(order).getOrderId();
     }
 
@@ -54,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
     public void update(final Long orderId, final OrderDTO orderDTO) {
         final Order order = orderRepository.findById(orderId)
                 .orElseThrow(NotFoundException::new);
-        orderMapper.updateOrder(orderDTO, order, projectRepository, userRepository, userRepository);
+        orderMapper.updateOrder(orderDTO, order, projectRepository, appUserRepository, appUserRepository);
         orderRepository.save(order);
     }
 

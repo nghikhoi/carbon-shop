@@ -94,7 +94,7 @@ public class Project {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "audit_by_id")
-    private User auditBy;
+    private AppUser auditBy;
 
     @OneToMany(mappedBy = "project")
     private Set<ProjectReview> projectReviews;

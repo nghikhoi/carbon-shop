@@ -27,11 +27,11 @@ import uit.carbon_shop.model.UserRole;
 
 
 @Entity
-@Table(name = "Users")
+@Table(name = "AppUsers")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public class User {
+public class AppUser {
 
     @Id
     @Column(nullable = false, updatable = false)

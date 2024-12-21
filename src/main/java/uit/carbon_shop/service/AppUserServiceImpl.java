@@ -7,54 +7,54 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uit.carbon_shop.domain.AppUser;
 import uit.carbon_shop.domain.CompanyReview;
 import uit.carbon_shop.domain.Order;
 import uit.carbon_shop.domain.Project;
 import uit.carbon_shop.domain.ProjectReview;
-import uit.carbon_shop.domain.User;
-import uit.carbon_shop.model.UserDTO;
+import uit.carbon_shop.model.AppUserDTO;
+import uit.carbon_shop.repos.AppUserRepository;
 import uit.carbon_shop.repos.CompanyRepository;
 import uit.carbon_shop.repos.CompanyReviewRepository;
 import uit.carbon_shop.repos.OrderRepository;
 import uit.carbon_shop.repos.ProjectRepository;
 import uit.carbon_shop.repos.ProjectReviewRepository;
-import uit.carbon_shop.repos.UserRepository;
 import uit.carbon_shop.util.NotFoundException;
 import uit.carbon_shop.util.ReferencedWarning;
 
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService {
+public class AppUserServiceImpl implements AppUserService {
 
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
     private final CompanyRepository companyRepository;
     private final ProjectRepository projectRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
+    private final AppUserMapper appUserMapper;
     private final OrderRepository orderRepository;
     private final CompanyReviewRepository companyReviewRepository;
     private final ProjectReviewRepository projectReviewRepository;
 
-    public UserServiceImpl(final UserRepository userRepository,
+    public AppUserServiceImpl(final AppUserRepository appUserRepository,
             final CompanyRepository companyRepository, final ProjectRepository projectRepository,
-            final PasswordEncoder passwordEncoder, final UserMapper userMapper,
+            final PasswordEncoder passwordEncoder, final AppUserMapper appUserMapper,
             final OrderRepository orderRepository,
             final CompanyReviewRepository companyReviewRepository,
             final ProjectReviewRepository projectReviewRepository) {
-        this.userRepository = userRepository;
+        this.appUserRepository = appUserRepository;
         this.companyRepository = companyRepository;
         this.projectRepository = projectRepository;
         this.passwordEncoder = passwordEncoder;
-        this.userMapper = userMapper;
+        this.appUserMapper = appUserMapper;
         this.orderRepository = orderRepository;
         this.companyReviewRepository = companyReviewRepository;
         this.projectReviewRepository = projectReviewRepository;
     }
 
     @Override
-    public Page<UserDTO> findAll(final String filter, final Pageable pageable) {
-        Page<User> page;
+    public Page<AppUserDTO> findAll(final String filter, final Pageable pageable) {
+        Page<AppUser> page;
         if (filter != null) {
             UUID uuidFilter = null;
             try {
@@ -62,81 +62,81 @@ public class UserServiceImpl implements UserService {
             } catch (final IllegalArgumentException illegalArgumentException) {
                 // keep null - no parseable input
             }
-            page = userRepository.findAllByUserId(uuidFilter, pageable);
+            page = appUserRepository.findAllByUserId(uuidFilter, pageable);
         } else {
-            page = userRepository.findAll(pageable);
+            page = appUserRepository.findAll(pageable);
         }
         return new PageImpl<>(page.getContent()
                 .stream()
-                .map(user -> userMapper.updateUserDTO(user, new UserDTO()))
+                .map(appUser -> appUserMapper.updateAppUserDTO(appUser, new AppUserDTO()))
                 .toList(),
                 pageable, page.getTotalElements());
     }
 
     @Override
-    public UserDTO get(final UUID userId) {
-        return userRepository.findById(userId)
-                .map(user -> userMapper.updateUserDTO(user, new UserDTO()))
+    public AppUserDTO get(final UUID userId) {
+        return appUserRepository.findById(userId)
+                .map(appUser -> appUserMapper.updateAppUserDTO(appUser, new AppUserDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
     @Override
-    public UUID create(final UserDTO userDTO) {
-        final User user = new User();
-        userMapper.updateUser(userDTO, user, companyRepository, projectRepository, passwordEncoder);
-        return userRepository.save(user).getUserId();
+    public UUID create(final AppUserDTO appUserDTO) {
+        final AppUser appUser = new AppUser();
+        appUserMapper.updateAppUser(appUserDTO, appUser, companyRepository, projectRepository, passwordEncoder);
+        return appUserRepository.save(appUser).getUserId();
     }
 
     @Override
-    public void update(final UUID userId, final UserDTO userDTO) {
-        final User user = userRepository.findById(userId)
+    public void update(final UUID userId, final AppUserDTO appUserDTO) {
+        final AppUser appUser = appUserRepository.findById(userId)
                 .orElseThrow(NotFoundException::new);
-        userMapper.updateUser(userDTO, user, companyRepository, projectRepository, passwordEncoder);
-        userRepository.save(user);
+        appUserMapper.updateAppUser(appUserDTO, appUser, companyRepository, projectRepository, passwordEncoder);
+        appUserRepository.save(appUser);
     }
 
     @Override
     public void delete(final UUID userId) {
-        userRepository.deleteById(userId);
+        appUserRepository.deleteById(userId);
     }
 
     @Override
     public boolean companyExists(final UUID id) {
-        return userRepository.existsByCompanyId(id);
+        return appUserRepository.existsByCompanyId(id);
     }
 
     @Override
     public ReferencedWarning getReferencedWarning(final UUID userId) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
-        final User user = userRepository.findById(userId)
+        final AppUser appUser = appUserRepository.findById(userId)
                 .orElseThrow(NotFoundException::new);
-        final Project auditByProject = projectRepository.findFirstByAuditBy(user);
+        final Project auditByProject = projectRepository.findFirstByAuditBy(appUser);
         if (auditByProject != null) {
-            referencedWarning.setKey("user.project.auditBy.referenced");
+            referencedWarning.setKey("appUser.project.auditBy.referenced");
             referencedWarning.addParam(auditByProject.getProjectId());
             return referencedWarning;
         }
-        final Order processByOrder = orderRepository.findFirstByProcessBy(user);
+        final Order processByOrder = orderRepository.findFirstByProcessBy(appUser);
         if (processByOrder != null) {
-            referencedWarning.setKey("user.order.processBy.referenced");
+            referencedWarning.setKey("appUser.order.processBy.referenced");
             referencedWarning.addParam(processByOrder.getOrderId());
             return referencedWarning;
         }
-        final Order createdByOrder = orderRepository.findFirstByCreatedBy(user);
+        final Order createdByOrder = orderRepository.findFirstByCreatedBy(appUser);
         if (createdByOrder != null) {
-            referencedWarning.setKey("user.order.createdBy.referenced");
+            referencedWarning.setKey("appUser.order.createdBy.referenced");
             referencedWarning.addParam(createdByOrder.getOrderId());
             return referencedWarning;
         }
-        final CompanyReview reviewByCompanyReview = companyReviewRepository.findFirstByReviewBy(user);
+        final CompanyReview reviewByCompanyReview = companyReviewRepository.findFirstByReviewBy(appUser);
         if (reviewByCompanyReview != null) {
-            referencedWarning.setKey("user.companyReview.reviewBy.referenced");
+            referencedWarning.setKey("appUser.companyReview.reviewBy.referenced");
             referencedWarning.addParam(reviewByCompanyReview.getId());
             return referencedWarning;
         }
-        final ProjectReview reviewByProjectReview = projectReviewRepository.findFirstByReviewBy(user);
+        final ProjectReview reviewByProjectReview = projectReviewRepository.findFirstByReviewBy(appUser);
         if (reviewByProjectReview != null) {
-            referencedWarning.setKey("user.projectReview.reviewBy.referenced");
+            referencedWarning.setKey("appUser.projectReview.reviewBy.referenced");
             referencedWarning.addParam(reviewByProjectReview.getId());
             return referencedWarning;
         }

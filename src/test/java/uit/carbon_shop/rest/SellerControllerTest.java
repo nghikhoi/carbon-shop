@@ -2,6 +2,7 @@ package uit.carbon_shop.rest;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,19 @@ public class SellerControllerTest extends BaseIT {
                     .get("/api/seller/project/test-projectId")
                 .then()
                     .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    void viewProject_unauthorized() {
+        RestAssured
+                .given()
+                    .redirects().follow(false)
+                    .accept(ContentType.JSON)
+                .when()
+                    .get("/api/seller/project/test-projectId")
+                .then()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .body("code", Matchers.equalTo("AUTHORIZATION_DENIED"));
     }
 
     @Test

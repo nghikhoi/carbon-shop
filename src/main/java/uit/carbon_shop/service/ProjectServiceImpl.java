@@ -10,11 +10,11 @@ import uit.carbon_shop.domain.Order;
 import uit.carbon_shop.domain.Project;
 import uit.carbon_shop.domain.ProjectReview;
 import uit.carbon_shop.model.ProjectDTO;
+import uit.carbon_shop.repos.AppUserRepository;
 import uit.carbon_shop.repos.CompanyRepository;
 import uit.carbon_shop.repos.OrderRepository;
 import uit.carbon_shop.repos.ProjectRepository;
 import uit.carbon_shop.repos.ProjectReviewRepository;
-import uit.carbon_shop.repos.UserRepository;
 import uit.carbon_shop.util.NotFoundException;
 import uit.carbon_shop.util.ReferencedWarning;
 
@@ -25,18 +25,18 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
     private final CompanyRepository companyRepository;
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
     private final ProjectMapper projectMapper;
     private final OrderRepository orderRepository;
     private final ProjectReviewRepository projectReviewRepository;
 
     public ProjectServiceImpl(final ProjectRepository projectRepository,
-            final CompanyRepository companyRepository, final UserRepository userRepository,
+            final CompanyRepository companyRepository, final AppUserRepository appUserRepository,
             final ProjectMapper projectMapper, final OrderRepository orderRepository,
             final ProjectReviewRepository projectReviewRepository) {
         this.projectRepository = projectRepository;
         this.companyRepository = companyRepository;
-        this.userRepository = userRepository;
+        this.appUserRepository = appUserRepository;
         this.projectMapper = projectMapper;
         this.orderRepository = orderRepository;
         this.projectReviewRepository = projectReviewRepository;
@@ -73,7 +73,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public UUID create(final ProjectDTO projectDTO) {
         final Project project = new Project();
-        projectMapper.updateProject(projectDTO, project, companyRepository, userRepository);
+        projectMapper.updateProject(projectDTO, project, companyRepository, appUserRepository);
         return projectRepository.save(project).getProjectId();
     }
 
@@ -81,7 +81,7 @@ public class ProjectServiceImpl implements ProjectService {
     public void update(final UUID projectId, final ProjectDTO projectDTO) {
         final Project project = projectRepository.findById(projectId)
                 .orElseThrow(NotFoundException::new);
-        projectMapper.updateProject(projectDTO, project, companyRepository, userRepository);
+        projectMapper.updateProject(projectDTO, project, companyRepository, appUserRepository);
         projectRepository.save(project);
     }
 
@@ -90,8 +90,8 @@ public class ProjectServiceImpl implements ProjectService {
         final Project project = projectRepository.findById(projectId)
                 .orElseThrow(NotFoundException::new);
         // remove many-to-many relations at owning side
-        userRepository.findAllByFavoriteProjects(project)
-                .forEach(user -> user.getFavoriteProjects().remove(project));
+        appUserRepository.findAllByFavoriteProjects(project)
+                .forEach(appUser -> appUser.getFavoriteProjects().remove(project));
         projectRepository.delete(project);
     }
 

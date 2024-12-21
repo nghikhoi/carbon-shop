@@ -78,11 +78,11 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "process_by_id")
-    private User processBy;
+    private AppUser processBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by_id")
-    private User createdBy;
+    private AppUser createdBy;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

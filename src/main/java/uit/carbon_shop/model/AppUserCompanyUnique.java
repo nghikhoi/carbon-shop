@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 import java.util.Map;
 import java.util.UUID;
 import org.springframework.web.servlet.HandlerMapping;
-import uit.carbon_shop.service.UserService;
+import uit.carbon_shop.service.AppUserService;
 
 
 /**
@@ -26,24 +26,24 @@ import uit.carbon_shop.service.UserService;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(
-        validatedBy = UserCompanyUnique.UserCompanyUniqueValidator.class
+        validatedBy = AppUserCompanyUnique.AppUserCompanyUniqueValidator.class
 )
-public @interface UserCompanyUnique {
+public @interface AppUserCompanyUnique {
 
-    String message() default "{Exists.user.company}";
+    String message() default "{Exists.appUser.company}";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
-    class UserCompanyUniqueValidator implements ConstraintValidator<UserCompanyUnique, UUID> {
+    class AppUserCompanyUniqueValidator implements ConstraintValidator<AppUserCompanyUnique, UUID> {
 
-        private final UserService userService;
+        private final AppUserService appUserService;
         private final HttpServletRequest request;
 
-        public UserCompanyUniqueValidator(final UserService userService,
+        public AppUserCompanyUniqueValidator(final AppUserService appUserService,
                 final HttpServletRequest request) {
-            this.userService = userService;
+            this.appUserService = appUserService;
             this.request = request;
         }
 
@@ -56,11 +56,11 @@ public @interface UserCompanyUnique {
             @SuppressWarnings("unchecked") final Map<String, String> pathVariables =
                     ((Map<String, String>)request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE));
             final String currentId = pathVariables.get("userId");
-            if (currentId != null && value.equals(userService.get(UUID.fromString(currentId)).getCompany())) {
+            if (currentId != null && value.equals(appUserService.get(UUID.fromString(currentId)).getCompany())) {
                 // value hasn't changed
                 return true;
             }
-            return !userService.companyExists(value);
+            return !appUserService.companyExists(value);
         }
 
     }

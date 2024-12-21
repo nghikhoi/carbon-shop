@@ -22,7 +22,7 @@ public class RegistrationResourceTest extends BaseIT {
                     .post("/register")
                 .then()
                     .statusCode(HttpStatus.OK.value());
-            assertEquals(3, userRepository.count());
+            assertEquals(3, appUserRepository.count());
         }
 
     }

@@ -7,21 +7,19 @@ import io.restassured.http.ContentType;
 import java.util.UUID;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import uit.carbon_shop.config.BaseIT;
 
 
-public class UserResourceTest extends BaseIT {
+public class AppUserResourceTest extends BaseIT {
 
     @Test
-    void getAllUsers_success() {
+    void getAllAppUsers_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/users")
+                    .get("/api/appUsers")
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("page.totalElements", Matchers.equalTo(2))
@@ -29,13 +27,12 @@ public class UserResourceTest extends BaseIT {
     }
 
     @Test
-    void getAllUsers_filtered() {
+    void getAllAppUsers_filtered() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/users?filter=b8f45244-f093-39e1-aea3-f9117ca45157")
+                    .get("/api/appUsers?filter=b8f45244-f093-39e1-aea3-f9117ca45157")
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("page.totalElements", Matchers.equalTo(1))
@@ -43,69 +40,52 @@ public class UserResourceTest extends BaseIT {
     }
 
     @Test
-    void getAllUsers_unauthorized() {
+    void getAppUser_success() {
         RestAssured
                 .given()
-                    .redirects().follow(false)
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/users")
-                .then()
-                    .statusCode(HttpStatus.UNAUTHORIZED.value())
-                    .body("code", Matchers.equalTo("AUTHORIZATION_DENIED"));
-    }
-
-    @Test
-    void getUser_success() {
-        RestAssured
-                .given()
-                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
-                    .accept(ContentType.JSON)
-                .when()
-                    .get("/api/users/a93e29a3-5278-371c-bf65-495871231324")
+                    .get("/api/appUsers/a93e29a3-5278-371c-bf65-495871231324")
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("name", Matchers.equalTo("Sed diam voluptua."));
     }
 
     @Test
-    void getUser_notFound() {
+    void getAppUser_notFound() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/users/2383af9d-6f6c-36ac-ae72-992f2977f67e")
+                    .get("/api/appUsers/2383af9d-6f6c-36ac-ae72-992f2977f67e")
                 .then()
                     .statusCode(HttpStatus.NOT_FOUND.value())
                     .body("code", Matchers.equalTo("NOT_FOUND"));
     }
 
     @Test
-    void createUser_success() {
+    void createAppUser_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
-                    .body(readResource("/requests/userDTORequest.json"))
+                    .body(readResource("/requests/appUserDTORequest.json"))
                 .when()
-                    .post("/api/users")
+                    .post("/api/appUsers")
                 .then()
                     .statusCode(HttpStatus.CREATED.value());
-        assertEquals(3, userRepository.count());
+        assertEquals(3, appUserRepository.count());
     }
 
     @Test
-    void createUser_missingField() {
+    void createAppUser_missingField() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
-                    .body(readResource("/requests/userDTORequest_missingField.json"))
+                    .body(readResource("/requests/appUserDTORequest_missingField.json"))
                 .when()
-                    .post("/api/users")
+                    .post("/api/appUsers")
                 .then()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .body("code", Matchers.equalTo("VALIDATION_FAILED"))
@@ -114,32 +94,30 @@ public class UserResourceTest extends BaseIT {
     }
 
     @Test
-    void updateUser_success() {
+    void updateAppUser_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
-                    .body(readResource("/requests/userDTORequest.json"))
+                    .body(readResource("/requests/appUserDTORequest.json"))
                 .when()
-                    .put("/api/users/a93e29a3-5278-371c-bf65-495871231324")
+                    .put("/api/appUsers/a93e29a3-5278-371c-bf65-495871231324")
                 .then()
                     .statusCode(HttpStatus.OK.value());
-        assertEquals("Duis autem vel.", userRepository.findById(UUID.fromString("a93e29a3-5278-371c-bf65-495871231324")).orElseThrow().getName());
-        assertEquals(2, userRepository.count());
+        assertEquals("Duis autem vel.", appUserRepository.findById(UUID.fromString("a93e29a3-5278-371c-bf65-495871231324")).orElseThrow().getName());
+        assertEquals(2, appUserRepository.count());
     }
 
     @Test
-    void deleteUser_success() {
+    void deleteAppUser_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
-                    .delete("/api/users/a93e29a3-5278-371c-bf65-495871231324")
+                    .delete("/api/appUsers/a93e29a3-5278-371c-bf65-495871231324")
                 .then()
                     .statusCode(HttpStatus.NO_CONTENT.value());
-        assertEquals(1, userRepository.count());
+        assertEquals(1, appUserRepository.count());
     }
 
 }

@@ -13,7 +13,7 @@ import uit.carbon_shop.util.WebUtils;
 
 @Getter
 @Setter
-public class UserDTO {
+public class AppUserDTO {
 
     private UUID userId;
 
@@ -39,7 +39,7 @@ public class UserDTO {
     @NotNull
     private UserRole role;
 
-    @UserCompanyUnique
+    @AppUserCompanyUnique
     private UUID company;
 
     private List<UUID> favoriteProjects;

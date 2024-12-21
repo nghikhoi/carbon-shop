@@ -59,7 +59,7 @@ public class CompanyReview {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_by_id")
-    private User reviewBy;
+    private AppUser reviewBy;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uit.carbon_shop.model.AppUserDTO;
 import uit.carbon_shop.model.MediatorAnswerDTO;
 import uit.carbon_shop.model.MediatorApproveProjectDTO;
 import uit.carbon_shop.model.MediatorApproveUserDTO;
@@ -20,7 +21,6 @@ import uit.carbon_shop.model.MediatorProcessOrderDTO;
 import uit.carbon_shop.model.MediatorRejectProjectDTO;
 import uit.carbon_shop.model.MediatorRejectUserDTO;
 import uit.carbon_shop.model.OrderDTO;
-import uit.carbon_shop.model.UserDTO;
 import uit.carbon_shop.model.UserRole;
 
 
@@ -52,14 +52,14 @@ public class MediatorAuditController {
     }
 
     @PatchMapping("/user/{userId}/approve")
-    public ResponseEntity<UserDTO> approveUserRegistration(
+    public ResponseEntity<AppUserDTO> approveUserRegistration(
             @PathVariable(name = "userId") final String userId,
             @RequestBody @Valid final MediatorApproveUserDTO mediatorApproveUserDTO) {
         return ResponseEntity.ok(null);
     }
 
     @PatchMapping("/user/{userId}/reject")
-    public ResponseEntity<UserDTO> rejectUserRegistration(
+    public ResponseEntity<AppUserDTO> rejectUserRegistration(
             @PathVariable(name = "userId") final String userId,
             @RequestBody @Valid final MediatorRejectUserDTO mediatorRejectUserDTO) {
         return ResponseEntity.ok(null);

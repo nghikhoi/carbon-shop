@@ -7,12 +7,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
+import uit.carbon_shop.domain.AppUser;
 import uit.carbon_shop.domain.Company;
 import uit.carbon_shop.domain.Project;
-import uit.carbon_shop.domain.User;
 import uit.carbon_shop.model.ProjectDTO;
+import uit.carbon_shop.repos.AppUserRepository;
 import uit.carbon_shop.repos.CompanyRepository;
-import uit.carbon_shop.repos.UserRepository;
 import uit.carbon_shop.util.NotFoundException;
 
 
@@ -36,15 +36,17 @@ public interface ProjectMapper {
     @Mapping(target = "ownerCompany", ignore = true)
     @Mapping(target = "auditBy", ignore = true)
     Project updateProject(ProjectDTO projectDTO, @MappingTarget Project project,
-            @Context CompanyRepository companyRepository, @Context UserRepository userRepository);
+            @Context CompanyRepository companyRepository,
+            @Context AppUserRepository appUserRepository);
 
     @AfterMapping
     default void afterUpdateProject(ProjectDTO projectDTO, @MappingTarget Project project,
-            @Context CompanyRepository companyRepository, @Context UserRepository userRepository) {
+            @Context CompanyRepository companyRepository,
+            @Context AppUserRepository appUserRepository) {
         final Company ownerCompany = projectDTO.getOwnerCompany() == null ? null : companyRepository.findById(projectDTO.getOwnerCompany())
                 .orElseThrow(() -> new NotFoundException("ownerCompany not found"));
         project.setOwnerCompany(ownerCompany);
-        final User auditBy = projectDTO.getAuditBy() == null ? null : userRepository.findById(projectDTO.getAuditBy())
+        final AppUser auditBy = projectDTO.getAuditBy() == null ? null : appUserRepository.findById(projectDTO.getAuditBy())
                 .orElseThrow(() -> new NotFoundException("auditBy not found"));
         project.setAuditBy(auditBy);
     }

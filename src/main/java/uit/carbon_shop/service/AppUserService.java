@@ -3,19 +3,19 @@ package uit.carbon_shop.service;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import uit.carbon_shop.model.UserDTO;
+import uit.carbon_shop.model.AppUserDTO;
 import uit.carbon_shop.util.ReferencedWarning;
 
 
-public interface UserService {
+public interface AppUserService {
 
-    Page<UserDTO> findAll(String filter, Pageable pageable);
+    Page<AppUserDTO> findAll(String filter, Pageable pageable);
 
-    UserDTO get(UUID userId);
+    AppUserDTO get(UUID userId);
 
-    UUID create(UserDTO userDTO);
+    UUID create(AppUserDTO appUserDTO);
 
-    void update(UUID userId, UserDTO userDTO);
+    void update(UUID userId, AppUserDTO appUserDTO);
 
     void delete(UUID userId);
 

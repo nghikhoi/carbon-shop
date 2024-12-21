@@ -12,7 +12,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import uit.carbon_shop.repos.UserRepository;
+import uit.carbon_shop.repos.AppUserRepository;
 import uit.carbon_shop.util.WebUtils;
 
 
@@ -35,10 +35,10 @@ public @interface PasswordResetRequestEmailExists {
 
     class PasswordResetRequestEmailExistsValidator implements ConstraintValidator<PasswordResetRequestEmailExists, String> {
 
-        private final UserRepository userRepository;
+        private final AppUserRepository appUserRepository;
 
-        public PasswordResetRequestEmailExistsValidator(final UserRepository userRepository) {
-            this.userRepository = userRepository;
+        public PasswordResetRequestEmailExistsValidator(final AppUserRepository appUserRepository) {
+            this.appUserRepository = appUserRepository;
         }
 
         @Override
@@ -47,7 +47,7 @@ public @interface PasswordResetRequestEmailExists {
                 // no valid value present
                 return true;
             }
-            return userRepository.existsByEmailIgnoreCase(value);
+            return appUserRepository.existsByEmailIgnoreCase(value);
         }
 
     }

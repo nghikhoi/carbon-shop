@@ -7,12 +7,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
+import uit.carbon_shop.domain.AppUser;
 import uit.carbon_shop.domain.Order;
 import uit.carbon_shop.domain.Project;
-import uit.carbon_shop.domain.User;
 import uit.carbon_shop.model.OrderDTO;
+import uit.carbon_shop.repos.AppUserRepository;
 import uit.carbon_shop.repos.ProjectRepository;
-import uit.carbon_shop.repos.UserRepository;
 import uit.carbon_shop.util.NotFoundException;
 
 
@@ -39,20 +39,22 @@ public interface OrderMapper {
     @Mapping(target = "processBy", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     Order updateOrder(OrderDTO orderDTO, @MappingTarget Order order,
-            @Context ProjectRepository projectRepository, @Context UserRepository userRepository,
-            @Context UserRepository userRepository);
+            @Context ProjectRepository projectRepository,
+            @Context AppUserRepository appUserRepository,
+            @Context AppUserRepository appUserRepository);
 
     @AfterMapping
     default void afterUpdateOrder(OrderDTO orderDTO, @MappingTarget Order order,
-            @Context ProjectRepository projectRepository, @Context UserRepository userRepository,
-            @Context UserRepository userRepository) {
+            @Context ProjectRepository projectRepository,
+            @Context AppUserRepository appUserRepository,
+            @Context AppUserRepository appUserRepository) {
         final Project project = orderDTO.getProject() == null ? null : projectRepository.findById(orderDTO.getProject())
                 .orElseThrow(() -> new NotFoundException("project not found"));
         order.setProject(project);
-        final User processBy = orderDTO.getProcessBy() == null ? null : userRepository.findById(orderDTO.getProcessBy())
+        final AppUser processBy = orderDTO.getProcessBy() == null ? null : appUserRepository.findById(orderDTO.getProcessBy())
                 .orElseThrow(() -> new NotFoundException("processBy not found"));
         order.setProcessBy(processBy);
-        final User createdBy = orderDTO.getCreatedBy() == null ? null : userRepository.findById(orderDTO.getCreatedBy())
+        final AppUser createdBy = orderDTO.getCreatedBy() == null ? null : appUserRepository.findById(orderDTO.getCreatedBy())
                 .orElseThrow(() -> new NotFoundException("createdBy not found"));
         order.setCreatedBy(createdBy);
     }

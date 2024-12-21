@@ -6,30 +6,30 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import uit.carbon_shop.domain.User;
+import uit.carbon_shop.domain.AppUser;
 import uit.carbon_shop.model.UserUserDetails;
-import uit.carbon_shop.repos.UserRepository;
+import uit.carbon_shop.repos.AppUserRepository;
 
 
 @Service
 @Slf4j
 public class UserUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
 
-    public UserUserDetailsService(final UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserUserDetailsService(final AppUserRepository appUserRepository) {
+        this.appUserRepository = appUserRepository;
     }
 
     @Override
     public UserUserDetails loadUserByUsername(final String username) {
-        final User user = userRepository.findByEmailIgnoreCase(username);
-        if (user == null) {
+        final AppUser appUser = appUserRepository.findByEmailIgnoreCase(username);
+        if (appUser == null) {
             log.warn("user not found: {}", username);
             throw new UsernameNotFoundException("User " + username + " not found");
         }
-        final List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
-        return new UserUserDetails(user.getUserId(), username, user.getPassword(), authorities);
+        final List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(appUser.getRole().name()));
+        return new UserUserDetails(appUser.getUserId(), username, appUser.getPassword(), authorities);
     }
 
 }

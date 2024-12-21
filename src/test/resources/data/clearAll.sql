@@ -6,7 +6,7 @@ DELETE FROM orders;
 
 DELETE FROM companies;
 
-DELETE FROM users;
+DELETE FROM app_users;
 
 DELETE FROM file_documents;
 

@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -15,7 +14,6 @@ import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,23 +23,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uit.carbon_shop.model.UserDTO;
-import uit.carbon_shop.model.UserRole;
-import uit.carbon_shop.service.UserService;
+import uit.carbon_shop.model.AppUserDTO;
+import uit.carbon_shop.service.AppUserService;
 import uit.carbon_shop.util.ReferencedException;
 import uit.carbon_shop.util.ReferencedWarning;
 
 
 @RestController
-@RequestMapping(value = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
-@PreAuthorize("hasAnyAuthority('" + UserRole.Fields.SELLER_OR_BUYER + "', '" + UserRole.Fields.MEDIATOR + "')")
-@SecurityRequirement(name = "bearer-jwt")
-public class UserResource {
+@RequestMapping(value = "/api/appUsers", produces = MediaType.APPLICATION_JSON_VALUE)
+public class AppUserResource {
 
-    private final UserService userService;
+    private final AppUserService appUserService;
 
-    public UserResource(final UserService userService) {
-        this.userService = userService;
+    public AppUserResource(final AppUserService appUserService) {
+        this.appUserService = appUserService;
     }
 
     @Operation(
@@ -64,39 +59,39 @@ public class UserResource {
             }
     )
     @GetMapping
-    public ResponseEntity<Page<UserDTO>> getAllUsers(
+    public ResponseEntity<Page<AppUserDTO>> getAllAppUsers(
             @RequestParam(name = "filter", required = false) final String filter,
             @Parameter(hidden = true) @SortDefault(sort = "userId") @PageableDefault(size = 20) final Pageable pageable) {
-        return ResponseEntity.ok(userService.findAll(filter, pageable));
+        return ResponseEntity.ok(appUserService.findAll(filter, pageable));
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable(name = "userId") final UUID userId) {
-        return ResponseEntity.ok(userService.get(userId));
+    public ResponseEntity<AppUserDTO> getAppUser(@PathVariable(name = "userId") final UUID userId) {
+        return ResponseEntity.ok(appUserService.get(userId));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<UUID> createUser(@RequestBody @Valid final UserDTO userDTO) {
-        final UUID createdUserId = userService.create(userDTO);
+    public ResponseEntity<UUID> createAppUser(@RequestBody @Valid final AppUserDTO appUserDTO) {
+        final UUID createdUserId = appUserService.create(appUserDTO);
         return new ResponseEntity<>(createdUserId, HttpStatus.CREATED);
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<UUID> updateUser(@PathVariable(name = "userId") final UUID userId,
-            @RequestBody @Valid final UserDTO userDTO) {
-        userService.update(userId, userDTO);
+    public ResponseEntity<UUID> updateAppUser(@PathVariable(name = "userId") final UUID userId,
+            @RequestBody @Valid final AppUserDTO appUserDTO) {
+        appUserService.update(userId, appUserDTO);
         return ResponseEntity.ok(userId);
     }
 
     @DeleteMapping("/{userId}")
     @ApiResponse(responseCode = "204")
-    public ResponseEntity<Void> deleteUser(@PathVariable(name = "userId") final UUID userId) {
-        final ReferencedWarning referencedWarning = userService.getReferencedWarning(userId);
+    public ResponseEntity<Void> deleteAppUser(@PathVariable(name = "userId") final UUID userId) {
+        final ReferencedWarning referencedWarning = appUserService.getReferencedWarning(userId);
         if (referencedWarning != null) {
             throw new ReferencedException(referencedWarning);
         }
-        userService.delete(userId);
+        appUserService.delete(userId);
         return ResponseEntity.noContent().build();
     }
 

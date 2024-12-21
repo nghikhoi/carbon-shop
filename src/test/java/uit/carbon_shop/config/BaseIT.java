@@ -21,13 +21,13 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import uit.carbon_shop.CarbonShopApplication;
+import uit.carbon_shop.repos.AppUserRepository;
 import uit.carbon_shop.repos.CompanyRepository;
 import uit.carbon_shop.repos.CompanyReviewRepository;
 import uit.carbon_shop.repos.FileDocumentRepository;
 import uit.carbon_shop.repos.OrderRepository;
 import uit.carbon_shop.repos.ProjectRepository;
 import uit.carbon_shop.repos.ProjectReviewRepository;
-import uit.carbon_shop.repos.UserRepository;
 
 
 /**
@@ -40,7 +40,7 @@ import uit.carbon_shop.repos.UserRepository;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @ActiveProfiles("it")
-@Sql({"/data/clearAll.sql", "/data/userData.sql"})
+@Sql({"/data/clearAll.sql", "/data/appUserData.sql"})
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 public abstract class BaseIT {
 
@@ -76,7 +76,7 @@ public abstract class BaseIT {
     public CompanyRepository companyRepository;
 
     @Autowired
-    public UserRepository userRepository;
+    public AppUserRepository appUserRepository;
 
     @Autowired
     public FileDocumentRepository fileDocumentRepository;

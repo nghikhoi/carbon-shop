@@ -42,7 +42,7 @@ error:
     http-statuses:
       org.springframework.security.authorization.AuthorizationDeniedException: unauthorized
     codes:
-      UserCompanyUnique: USER_COMPANY_UNIQUE
+      AppUserCompanyUnique: APP_USER_COMPANY_UNIQUE
       PasswordResetRequestEmailExists: PASSWORD_RESET_REQUEST_EMAIL_EXISTS
       RegistrationRequestEmailUnique: REGISTRATION_REQUEST_EMAIL_UNIQUE
 management:

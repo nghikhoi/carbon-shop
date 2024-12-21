@@ -56,7 +56,7 @@ public class Company {
     private CompanyStatus status;
 
     @OneToOne(mappedBy = "company", fetch = FetchType.LAZY)
-    private User representative;
+    private AppUser representative;
 
     @OneToMany(mappedBy = "ownerCompany")
     private Set<Project> projects;
