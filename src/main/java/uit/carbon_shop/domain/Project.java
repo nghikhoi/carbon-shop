@@ -14,11 +14,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -74,6 +77,10 @@ public class Project {
     @Column
     private String methodPayment;
 
+    @Column(columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<Long> projectImages;
+
     @Column
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
@@ -88,6 +95,9 @@ public class Project {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "audit_by_id")
     private Mediator auditBy;
+
+    @OneToMany(mappedBy = "project")
+    private Set<ProjectReview> projectReviews;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

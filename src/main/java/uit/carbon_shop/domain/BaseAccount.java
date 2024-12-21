@@ -19,7 +19,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public abstract class BaseUser {
+public abstract class BaseAccount {
 
     @Id
     @Column(nullable = false, updatable = false)

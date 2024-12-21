@@ -10,6 +10,7 @@ import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +33,11 @@ public class SwaggerConfig {
                         .addProperty("message", new StringSchema())
                         .addProperty("property", new StringSchema())
                         .addProperty("rejectedValue", new ObjectSchema())
-                        .addProperty("path", new StringSchema())));
+                        .addProperty("path", new StringSchema()))
+                .addSecuritySchemes("bearer-jwt", new SecurityScheme()
+                        .type(SecurityScheme.Type.HTTP)
+                        .scheme("bearer")
+                        .bearerFormat("JWT")));
     }
 
     @Bean

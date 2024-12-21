@@ -5,6 +5,9 @@ INSERT INTO orders (
     price,
     total,
     status,
+    payment_bill_file,
+    contract_file,
+    cert_images,
     created_at,
     updated_at
 ) VALUES (
@@ -14,6 +17,9 @@ INSERT INTO orders (
     'Lorem ipsum dolor.',
     'At vero eos.',
     'INIT',
+    79,
+    90,
+    '[78]',
     '2024-09-02 14:30:00',
     '2024-09-02 14:30:00'
 );
@@ -25,6 +31,9 @@ INSERT INTO orders (
     price,
     total,
     status,
+    payment_bill_file,
+    contract_file,
+    cert_images,
     created_at,
     updated_at
 ) VALUES (
@@ -34,6 +43,9 @@ INSERT INTO orders (
     'Duis autem vel.',
     'Stet clita kasd.',
     'INIT',
+    10,
+    89,
+    '[77]',
     '2024-09-03 14:30:00',
     '2024-09-03 14:30:00'
 );

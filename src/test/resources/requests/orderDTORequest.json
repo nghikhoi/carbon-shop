@@ -3,5 +3,8 @@
   "unit" : "Ut wisi enim.",
   "price" : "Et ea rebum.",
   "total" : "Ut wisi enim.",
-  "status" : "INIT"
+  "status" : "INIT",
+  "paymentBillFile" : 24,
+  "contractFile" : 75,
+  "certImages" : [ 93 ]
 }

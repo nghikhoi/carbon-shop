@@ -2,6 +2,7 @@ package uit.carbon_shop.model;
 
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,6 +44,8 @@ public class ProjectDTO {
 
     @Size(max = 255)
     private String methodPayment;
+
+    private List<Long> projectImages;
 
     private ProjectStatus status;
 

@@ -56,8 +56,8 @@ management:
     health:
       show-details: always
 springdoc:
-  pathsToMatch: /, /api/**, /mediator/order/**, /user/authenticate, /user/passwordReset/**,
-    /user/register, /mediator/authenticate, /mediator/passwordReset/**, /mediator/register
+  pathsToMatch: /, /api/**, /user/authenticate, /user/passwordReset/**, /user/register,
+    /mediator/authenticate, /mediator/passwordReset/**, /mediator/register
 app:
   baseHost: ${BASE_HOST:http://localhost:null}
   mail:

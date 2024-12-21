@@ -3,6 +3,7 @@ package uit.carbon_shop.model;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,5 +39,7 @@ public class UserDTO {
 
     @UserCompanyUnique
     private UUID company;
+
+    private List<UUID> favoriteProjects;
 
 }

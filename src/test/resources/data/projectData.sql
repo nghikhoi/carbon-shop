@@ -12,6 +12,7 @@ INSERT INTO projects (
     cert,
     price,
     method_payment,
+    project_images,
     status,
     created_at,
     updated_at
@@ -29,6 +30,7 @@ INSERT INTO projects (
     'Sed ut perspiciatis.',
     'Lorem ipsum dolor.',
     'Consetetur sadipscing.',
+    '[63]',
     'INIT',
     '2024-09-02 14:30:00',
     '2024-09-02 14:30:00'
@@ -48,6 +50,7 @@ INSERT INTO projects (
     cert,
     price,
     method_payment,
+    project_images,
     status,
     created_at,
     updated_at
@@ -65,6 +68,7 @@ INSERT INTO projects (
     'Lorem ipsum dolor.',
     'Duis autem vel.',
     'Sed diam nonumy.',
+    '[62]',
     'INIT',
     '2024-09-03 14:30:00',
     '2024-09-03 14:30:00'

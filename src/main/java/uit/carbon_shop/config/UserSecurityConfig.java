@@ -41,7 +41,7 @@ public class UserSecurityConfig {
             @Qualifier("userAuthenticationManager") final AuthenticationManager userAuthenticationManager,
             @Qualifier("userRequestFilter") final JwtRequestFilter userRequestFilter) throws
             Exception {
-        return http.securityMatcher("/dummy/user")
+        return http.securityMatcher("/api/buyer/**", "/api/user/**", "/api/file/**")
                 .cors(withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())

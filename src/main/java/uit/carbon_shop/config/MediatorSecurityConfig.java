@@ -43,7 +43,7 @@ public class MediatorSecurityConfig {
             @Qualifier("mediatorAuthenticationManager") final AuthenticationManager mediatorAuthenticationManager,
             @Qualifier("mediatorRequestFilter") final JwtRequestFilter mediatorRequestFilter) throws
             Exception {
-        return http.securityMatcher("/dummy/mediator")
+        return http.securityMatcher("/api/mediator/**", "/api/file/*")
                 .cors(withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())

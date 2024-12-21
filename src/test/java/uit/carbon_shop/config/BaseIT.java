@@ -22,9 +22,12 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import uit.carbon_shop.CarbonShopApplication;
 import uit.carbon_shop.repos.CompanyRepository;
+import uit.carbon_shop.repos.CompanyReviewRepository;
+import uit.carbon_shop.repos.FileDocumentRepository;
 import uit.carbon_shop.repos.MediatorRepository;
 import uit.carbon_shop.repos.OrderRepository;
 import uit.carbon_shop.repos.ProjectRepository;
+import uit.carbon_shop.repos.ProjectReviewRepository;
 import uit.carbon_shop.repos.UserRepository;
 
 
@@ -43,7 +46,7 @@ import uit.carbon_shop.repos.UserRepository;
 public abstract class BaseIT {
 
     @ServiceConnection
-    private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:17.1");
+    private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:17.2");
     private static final GenericContainer<?> mailpitContainer = new GenericContainer<>("axllent/mailpit:v1.21");
     public static String smtpHost;
     public static Integer smtpPort;
@@ -78,6 +81,15 @@ public abstract class BaseIT {
 
     @Autowired
     public MediatorRepository mediatorRepository;
+
+    @Autowired
+    public FileDocumentRepository fileDocumentRepository;
+
+    @Autowired
+    public CompanyReviewRepository companyReviewRepository;
+
+    @Autowired
+    public ProjectReviewRepository projectReviewRepository;
 
     @PostConstruct
     public void initRestAssured() {

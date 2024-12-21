@@ -61,6 +61,9 @@ public class Company {
     @OneToMany(mappedBy = "ownerCompany")
     private Set<Project> projects;
 
+    @OneToMany(mappedBy = "company")
+    private Set<CompanyReview> comparnyReviews;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private OffsetDateTime createdAt;

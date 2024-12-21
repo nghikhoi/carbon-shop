@@ -7,6 +7,7 @@ import io.restassured.http.ContentType;
 import java.util.UUID;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import uit.carbon_shop.config.BaseIT;
 
@@ -17,6 +18,7 @@ public class UserResourceTest extends BaseIT {
     void getAllUsers_success() {
         RestAssured
                 .given()
+                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
                     .get("/api/users")
@@ -30,6 +32,7 @@ public class UserResourceTest extends BaseIT {
     void getAllUsers_filtered() {
         RestAssured
                 .given()
+                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
                     .get("/api/users?filter=b801a1c1-65dd-3420-816b-fec5edd6c2b1")
@@ -40,9 +43,23 @@ public class UserResourceTest extends BaseIT {
     }
 
     @Test
+    void getAllUsers_unauthorized() {
+        RestAssured
+                .given()
+                    .redirects().follow(false)
+                    .accept(ContentType.JSON)
+                .when()
+                    .get("/api/users")
+                .then()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .body("code", Matchers.equalTo("AUTHORIZATION_DENIED"));
+    }
+
+    @Test
     void getUser_success() {
         RestAssured
                 .given()
+                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
                     .get("/api/users/a9dd4a99-fba6-375a-9494-772b58f95280")
@@ -55,6 +72,7 @@ public class UserResourceTest extends BaseIT {
     void getUser_notFound() {
         RestAssured
                 .given()
+                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
                     .get("/api/users/234920ea-2540-3ec7-bbee-9efce43ea25e")
@@ -67,6 +85,7 @@ public class UserResourceTest extends BaseIT {
     void createUser_success() {
         RestAssured
                 .given()
+                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/userDTORequest.json"))
@@ -81,6 +100,7 @@ public class UserResourceTest extends BaseIT {
     void updateUser_success() {
         RestAssured
                 .given()
+                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/userDTORequest.json"))

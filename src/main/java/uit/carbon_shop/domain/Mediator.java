@@ -12,7 +12,7 @@ import lombok.Setter;
 @Table(name = "Mediators")
 @Getter
 @Setter
-public class Mediator extends BaseUser {
+public class Mediator extends BaseAccount {
 
     @OneToMany(mappedBy = "auditBy")
     private Set<Project> auditedProjects;
