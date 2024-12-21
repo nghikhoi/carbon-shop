@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import uit.carbon_shop.domain.User;
 import uit.carbon_shop.model.UserUserDetails;
 import uit.carbon_shop.repos.UserRepository;
-import uit.carbon_shop.util.UserRoles;
 
 
 @Service
@@ -29,8 +28,7 @@ public class UserUserDetailsService implements UserDetailsService {
             log.warn("user not found: {}", username);
             throw new UsernameNotFoundException("User " + username + " not found");
         }
-        final String role = "seller@invalid.bootify.io".equals(username) ? UserRoles.SELLER : UserRoles.BUYER;
-        final List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
+        final List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
         return new UserUserDetails(user.getUserId(), username, user.getPassword(), authorities);
     }
 

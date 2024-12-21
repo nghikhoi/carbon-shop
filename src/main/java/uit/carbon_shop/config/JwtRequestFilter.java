@@ -9,11 +9,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import uit.carbon_shop.service.TokenService;
+import uit.carbon_shop.service.UserTokenService;
+import uit.carbon_shop.service.UserUserDetailsService;
 
 
 /**
@@ -21,15 +22,16 @@ import uit.carbon_shop.service.TokenService;
  * a valid JWT has been found, load the user details from the database and set the
  * authenticated principal for the duration of this request.
  */
+@Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    private final UserDetailsService userDetailsService;
-    private final TokenService tokenService;
+    private final UserUserDetailsService userUserDetailsService;
+    private final UserTokenService userTokenService;
 
-    public JwtRequestFilter(final UserDetailsService userDetailsService,
-            final TokenService tokenService) {
-        this.userDetailsService = userDetailsService;
-        this.tokenService = tokenService;
+    public JwtRequestFilter(final UserUserDetailsService userUserDetailsService,
+            final UserTokenService userTokenService) {
+        this.userUserDetailsService = userUserDetailsService;
+        this.userTokenService = userTokenService;
     }
 
     @Override
@@ -44,7 +46,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         final String token = header.substring(7);
-        final String username = tokenService.validateTokenAndGetUsername(token);
+        final String username = userTokenService.validateTokenAndGetUsername(token);
         if (username == null) {
             // validation failed or token expired
             chain.doFilter(request, response);
@@ -53,7 +55,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         final UserDetails userDetails;
         try {
-            userDetails = userDetailsService.loadUserByUsername(username);
+            userDetails = userUserDetailsService.loadUserByUsername(username);
         } catch (final UsernameNotFoundException userNotFoundEx) {
             // user not found
             chain.doFilter(request, response);

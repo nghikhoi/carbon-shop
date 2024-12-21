@@ -11,7 +11,6 @@ import uit.carbon_shop.domain.Project;
 import uit.carbon_shop.domain.ProjectReview;
 import uit.carbon_shop.model.ProjectDTO;
 import uit.carbon_shop.repos.CompanyRepository;
-import uit.carbon_shop.repos.MediatorRepository;
 import uit.carbon_shop.repos.OrderRepository;
 import uit.carbon_shop.repos.ProjectRepository;
 import uit.carbon_shop.repos.ProjectReviewRepository;
@@ -26,22 +25,19 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
     private final CompanyRepository companyRepository;
-    private final MediatorRepository mediatorRepository;
-    private final ProjectMapper projectMapper;
     private final UserRepository userRepository;
+    private final ProjectMapper projectMapper;
     private final OrderRepository orderRepository;
     private final ProjectReviewRepository projectReviewRepository;
 
     public ProjectServiceImpl(final ProjectRepository projectRepository,
-            final CompanyRepository companyRepository, final MediatorRepository mediatorRepository,
-            final ProjectMapper projectMapper, final UserRepository userRepository,
-            final OrderRepository orderRepository,
+            final CompanyRepository companyRepository, final UserRepository userRepository,
+            final ProjectMapper projectMapper, final OrderRepository orderRepository,
             final ProjectReviewRepository projectReviewRepository) {
         this.projectRepository = projectRepository;
         this.companyRepository = companyRepository;
-        this.mediatorRepository = mediatorRepository;
-        this.projectMapper = projectMapper;
         this.userRepository = userRepository;
+        this.projectMapper = projectMapper;
         this.orderRepository = orderRepository;
         this.projectReviewRepository = projectReviewRepository;
     }
@@ -77,7 +73,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public UUID create(final ProjectDTO projectDTO) {
         final Project project = new Project();
-        projectMapper.updateProject(projectDTO, project, companyRepository, mediatorRepository);
+        projectMapper.updateProject(projectDTO, project, companyRepository, userRepository);
         return projectRepository.save(project).getProjectId();
     }
 
@@ -85,7 +81,7 @@ public class ProjectServiceImpl implements ProjectService {
     public void update(final UUID projectId, final ProjectDTO projectDTO) {
         final Project project = projectRepository.findById(projectId)
                 .orElseThrow(NotFoundException::new);
-        projectMapper.updateProject(projectDTO, project, companyRepository, mediatorRepository);
+        projectMapper.updateProject(projectDTO, project, companyRepository, userRepository);
         projectRepository.save(project);
     }
 

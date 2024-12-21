@@ -10,7 +10,7 @@ import uit.carbon_shop.util.WebUtils;
 
 @Getter
 @Setter
-public class UserAuthenticationRequest {
+public class AuthenticationRequest {
 
     @NotNull
     @Size(max = 255)

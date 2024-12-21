@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class UserTokenService implements TokenService {
+public class UserTokenService {
 
     private static final Duration JWT_TOKEN_VALIDITY = Duration.ofMinutes(60);
 

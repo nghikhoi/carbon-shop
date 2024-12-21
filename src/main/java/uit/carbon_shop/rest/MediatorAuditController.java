@@ -21,12 +21,12 @@ import uit.carbon_shop.model.MediatorRejectProjectDTO;
 import uit.carbon_shop.model.MediatorRejectUserDTO;
 import uit.carbon_shop.model.OrderDTO;
 import uit.carbon_shop.model.UserDTO;
-import uit.carbon_shop.util.UserRoles;
+import uit.carbon_shop.model.UserRole;
 
 
 @RestController
 @RequestMapping(value = "/api/mediator/audit", produces = MediaType.APPLICATION_JSON_VALUE)
-@PreAuthorize("hasAuthority('" + UserRoles.MEDIATOR + "')")
+@PreAuthorize("hasAuthority('" + UserRole.Fields.MEDIATOR + "')")
 @SecurityRequirement(name = "bearer-jwt")
 public class MediatorAuditController {
 

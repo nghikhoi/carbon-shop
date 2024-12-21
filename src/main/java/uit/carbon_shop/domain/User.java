@@ -1,27 +1,72 @@
 package uit.carbon_shop.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.time.OffsetDateTime;
 import java.util.Set;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import uit.carbon_shop.model.UserRole;
 
 
 @Entity
 @Table(name = "Users")
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public class User extends BaseAccount {
+public class User {
+
+    @Id
+    @Column(nullable = false, updatable = false)
+    @GeneratedValue
+    @UuidGenerator
+    private UUID userId;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column
+    private String resetPasswordUid;
+
+    @Column
+    private OffsetDateTime resetPasswordStart;
+
+    @Column
+    private String name;
+
+    @Column
+    private String phone;
+
+    @Column
+    private String email;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", unique = true)
     private Company company;
+
+    @OneToMany(mappedBy = "auditBy")
+    private Set<Project> auditedProjects;
 
     @OneToMany(mappedBy = "createdBy")
     private Set<Order> orders;
@@ -39,5 +84,13 @@ public class User extends BaseAccount {
 
     @OneToMany(mappedBy = "reviewBy")
     private Set<ProjectReview> projectReviews;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(nullable = false)
+    private OffsetDateTime updatedAt;
 
 }

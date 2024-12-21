@@ -11,7 +11,7 @@ INSERT INTO orders (
     created_at,
     updated_at
 ) VALUES (
-    1200,
+    1100,
     77,
     'At vero eos.',
     'Lorem ipsum dolor.',
@@ -37,7 +37,7 @@ INSERT INTO orders (
     created_at,
     updated_at
 ) VALUES (
-    1201,
+    1101,
     76,
     'Stet clita kasd.',
     'Duis autem vel.',

@@ -10,6 +10,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Order findFirstByProject(Project project);
 
+    Order findFirstByProcessBy(User user);
+
     Order findFirstByCreatedBy(User user);
 
 }

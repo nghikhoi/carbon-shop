@@ -18,28 +18,28 @@ public class UserResourceTest extends BaseIT {
     void getAllUsers_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
                     .get("/api/users")
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("page.totalElements", Matchers.equalTo(2))
-                    .body("content.get(0).userId", Matchers.equalTo("a9dd4a99-fba6-375a-9494-772b58f95280"));
+                    .body("content.get(0).userId", Matchers.equalTo("a93e29a3-5278-371c-bf65-495871231324"));
     }
 
     @Test
     void getAllUsers_filtered() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/users?filter=b801a1c1-65dd-3420-816b-fec5edd6c2b1")
+                    .get("/api/users?filter=b8f45244-f093-39e1-aea3-f9117ca45157")
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("page.totalElements", Matchers.equalTo(1))
-                    .body("content.get(0).userId", Matchers.equalTo("b801a1c1-65dd-3420-816b-fec5edd6c2b1"));
+                    .body("content.get(0).userId", Matchers.equalTo("b8f45244-f093-39e1-aea3-f9117ca45157"));
     }
 
     @Test
@@ -59,23 +59,23 @@ public class UserResourceTest extends BaseIT {
     void getUser_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/users/a9dd4a99-fba6-375a-9494-772b58f95280")
+                    .get("/api/users/a93e29a3-5278-371c-bf65-495871231324")
                 .then()
                     .statusCode(HttpStatus.OK.value())
-                    .body("passwordSalt", Matchers.equalTo("Quis nostrud exerci."));
+                    .body("name", Matchers.equalTo("Sed diam voluptua."));
     }
 
     @Test
     void getUser_notFound() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/users/234920ea-2540-3ec7-bbee-9efce43ea25e")
+                    .get("/api/users/2383af9d-6f6c-36ac-ae72-992f2977f67e")
                 .then()
                     .statusCode(HttpStatus.NOT_FOUND.value())
                     .body("code", Matchers.equalTo("NOT_FOUND"));
@@ -85,7 +85,7 @@ public class UserResourceTest extends BaseIT {
     void createUser_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/userDTORequest.json"))
@@ -97,19 +97,49 @@ public class UserResourceTest extends BaseIT {
     }
 
     @Test
+    void createUser_missingField() {
+        RestAssured
+                .given()
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
+                    .accept(ContentType.JSON)
+                    .contentType(ContentType.JSON)
+                    .body(readResource("/requests/userDTORequest_missingField.json"))
+                .when()
+                    .post("/api/users")
+                .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .body("code", Matchers.equalTo("VALIDATION_FAILED"))
+                    .body("fieldErrors.get(0).property", Matchers.equalTo("password"))
+                    .body("fieldErrors.get(0).code", Matchers.equalTo("REQUIRED_NOT_NULL"));
+    }
+
+    @Test
     void updateUser_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/userDTORequest.json"))
                 .when()
-                    .put("/api/users/a9dd4a99-fba6-375a-9494-772b58f95280")
+                    .put("/api/users/a93e29a3-5278-371c-bf65-495871231324")
                 .then()
                     .statusCode(HttpStatus.OK.value());
-        assertEquals("At vero eos.", userRepository.findById(UUID.fromString("a9dd4a99-fba6-375a-9494-772b58f95280")).orElseThrow().getPasswordSalt());
+        assertEquals("Duis autem vel.", userRepository.findById(UUID.fromString("a93e29a3-5278-371c-bf65-495871231324")).orElseThrow().getName());
         assertEquals(2, userRepository.count());
+    }
+
+    @Test
+    void deleteUser_success() {
+        RestAssured
+                .given()
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
+                    .accept(ContentType.JSON)
+                .when()
+                    .delete("/api/users/a93e29a3-5278-371c-bf65-495871231324")
+                .then()
+                    .statusCode(HttpStatus.NO_CONTENT.value());
+        assertEquals(1, userRepository.count());
     }
 
 }

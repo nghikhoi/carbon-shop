@@ -24,7 +24,7 @@ public class OrderResourceTest extends BaseIT {
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("size()", Matchers.equalTo(2))
-                    .body("get(0).orderId", Matchers.equalTo(1200));
+                    .body("get(0).orderId", Matchers.equalTo(1100));
     }
 
     @Test
@@ -34,7 +34,7 @@ public class OrderResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/orders/1200")
+                    .get("/api/orders/1100")
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("creditAmount", Matchers.equalTo(77));
@@ -46,7 +46,7 @@ public class OrderResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/orders/1866")
+                    .get("/api/orders/1766")
                 .then()
                     .statusCode(HttpStatus.NOT_FOUND.value())
                     .body("code", Matchers.equalTo("NOT_FOUND"));
@@ -75,10 +75,10 @@ public class OrderResourceTest extends BaseIT {
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/orderDTORequest.json"))
                 .when()
-                    .put("/api/orders/1200")
+                    .put("/api/orders/1100")
                 .then()
                     .statusCode(HttpStatus.OK.value());
-        assertEquals(((long)92), orderRepository.findById(((long)1200)).orElseThrow().getCreditAmount());
+        assertEquals(((long)92), orderRepository.findById(((long)1100)).orElseThrow().getCreditAmount());
         assertEquals(2, orderRepository.count());
     }
 
@@ -89,7 +89,7 @@ public class OrderResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .delete("/api/orders/1200")
+                    .delete("/api/orders/1100")
                 .then()
                     .statusCode(HttpStatus.NO_CONTENT.value());
         assertEquals(1, orderRepository.count());

@@ -14,7 +14,7 @@ public class FileControllerTest extends BaseIT {
     void upload_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
                     .post("/api/file/upload")
@@ -26,7 +26,7 @@ public class FileControllerTest extends BaseIT {
     void get_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
                     .get("/api/file/test-fileId")

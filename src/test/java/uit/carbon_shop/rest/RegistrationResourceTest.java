@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import uit.carbon_shop.config.BaseIT;
 
 
-public class UserRegistrationResourceTest extends BaseIT {
+public class RegistrationResourceTest extends BaseIT {
 
     @Test
     void register_success() {
@@ -17,9 +17,9 @@ public class UserRegistrationResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
-                    .body(readResource("/requests/userregistrationRequest.json"))
+                    .body(readResource("/requests/registrationRequest.json"))
                 .when()
-                    .post("/user/register")
+                    .post("/register")
                 .then()
                     .statusCode(HttpStatus.OK.value());
             assertEquals(3, userRepository.count());

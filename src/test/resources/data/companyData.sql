@@ -9,7 +9,7 @@ INSERT INTO companies (
     created_at,
     updated_at
 ) VALUES (
-    'a93e29a3-5278-371c-bf65-495871231324',
+    'a92d0103-08a6-3379-9a3d-9c728ee74244',
     'Sed diam voluptua.',
     'Nam liber tempor.',
     'At vero eos.',
@@ -31,7 +31,7 @@ INSERT INTO companies (
     created_at,
     updated_at
 ) VALUES (
-    'b8f45244-f093-39e1-aea3-f9117ca45157',
+    'b801e5d4-da87-3c39-9782-741cd794002d',
     'At vero eos.',
     'Consetetur sadipscing.',
     'Stet clita kasd.',

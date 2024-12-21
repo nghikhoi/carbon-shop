@@ -6,7 +6,7 @@ INSERT INTO company_reviews (
     created_at,
     updated_at
 ) VALUES (
-    1700,
+    1500,
     'Ut wisi enim.',
     88,
     '[96]',
@@ -22,7 +22,7 @@ INSERT INTO company_reviews (
     created_at,
     updated_at
 ) VALUES (
-    1701,
+    1501,
     'Nam liber tempor.',
     89,
     '[95]',

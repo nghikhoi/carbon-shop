@@ -12,42 +12,42 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import uit.carbon_shop.service.UserRegistrationService;
+import uit.carbon_shop.repos.UserRepository;
+import uit.carbon_shop.util.WebUtils;
 
 
 /**
- * Validate that the email value isn't taken yet.
+ * Validate that there is an account for the given e-mail.
  */
 @Target({ FIELD, METHOD, ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(
-        validatedBy = UserRegistrationRequestEmailUnique.UserRegistrationRequestEmailUniqueValidator.class
+        validatedBy = PasswordResetRequestEmailExists.PasswordResetRequestEmailExistsValidator.class
 )
-public @interface UserRegistrationRequestEmailUnique {
+public @interface PasswordResetRequestEmailExists {
 
-    String message() default "{registration.register.taken}";
+    String message() default "{passwordReset.start.noAccount}";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
-    class UserRegistrationRequestEmailUniqueValidator implements ConstraintValidator<UserRegistrationRequestEmailUnique, String> {
+    class PasswordResetRequestEmailExistsValidator implements ConstraintValidator<PasswordResetRequestEmailExists, String> {
 
-        private final UserRegistrationService userRegistrationService;
+        private final UserRepository userRepository;
 
-        public UserRegistrationRequestEmailUniqueValidator(
-                final UserRegistrationService userRegistrationService) {
-            this.userRegistrationService = userRegistrationService;
+        public PasswordResetRequestEmailExistsValidator(final UserRepository userRepository) {
+            this.userRepository = userRepository;
         }
 
         @Override
         public boolean isValid(final String value, final ConstraintValidatorContext cvContext) {
-            if (value == null) {
-                // no value present
+            if (value == null || !value.matches(WebUtils.EMAIL_PATTERN)) {
+                // no valid value present
                 return true;
             }
-            return !userRegistrationService.emailExists(value);
+            return userRepository.existsByEmailIgnoreCase(value);
         }
 
     }

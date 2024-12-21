@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uit.carbon_shop.domain.CompanyReview;
 import uit.carbon_shop.domain.Order;
+import uit.carbon_shop.domain.Project;
 import uit.carbon_shop.domain.ProjectReview;
 import uit.carbon_shop.domain.User;
 import uit.carbon_shop.model.UserDTO;
@@ -109,6 +110,18 @@ public class UserServiceImpl implements UserService {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final User user = userRepository.findById(userId)
                 .orElseThrow(NotFoundException::new);
+        final Project auditByProject = projectRepository.findFirstByAuditBy(user);
+        if (auditByProject != null) {
+            referencedWarning.setKey("user.project.auditBy.referenced");
+            referencedWarning.addParam(auditByProject.getProjectId());
+            return referencedWarning;
+        }
+        final Order processByOrder = orderRepository.findFirstByProcessBy(user);
+        if (processByOrder != null) {
+            referencedWarning.setKey("user.order.processBy.referenced");
+            referencedWarning.addParam(processByOrder.getOrderId());
+            return referencedWarning;
+        }
         final Order createdByOrder = orderRepository.findFirstByCreatedBy(user);
         if (createdByOrder != null) {
             referencedWarning.setKey("user.order.createdBy.referenced");

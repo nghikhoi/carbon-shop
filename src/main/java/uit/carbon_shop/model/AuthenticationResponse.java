@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MediatorAuthenticationResponse {
+public class AuthenticationResponse {
 
     private String accessToken;
 

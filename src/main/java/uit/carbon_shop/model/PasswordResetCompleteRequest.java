@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserPasswordResetCompleteRequest {
+public class PasswordResetCompleteRequest {
 
     @NotNull
     @Size(max = 255)

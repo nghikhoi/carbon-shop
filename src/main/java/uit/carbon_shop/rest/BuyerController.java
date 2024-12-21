@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import uit.carbon_shop.model.BuyerCreateOrder;
 import uit.carbon_shop.model.BuyerReviewCompany;
 import uit.carbon_shop.model.BuyerReviewProject;
-import uit.carbon_shop.util.UserRoles;
+import uit.carbon_shop.model.UserRole;
 
 
 @RestController
 @RequestMapping(value = "/api/buyer", produces = MediaType.APPLICATION_JSON_VALUE)
-@PreAuthorize("hasAnyAuthority('" + UserRoles.BUYER + "', '" + UserRoles.SELLER + "')")
+@PreAuthorize("hasAuthority('" + UserRole.Fields.SELLER_OR_BUYER + "')")
 @SecurityRequirement(name = "bearer-jwt")
 public class BuyerController {
 

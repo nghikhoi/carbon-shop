@@ -5,7 +5,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uit.carbon_shop.domain.Order;
 import uit.carbon_shop.model.OrderDTO;
-import uit.carbon_shop.repos.MediatorRepository;
 import uit.carbon_shop.repos.OrderRepository;
 import uit.carbon_shop.repos.ProjectRepository;
 import uit.carbon_shop.repos.UserRepository;
@@ -17,16 +16,14 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final ProjectRepository projectRepository;
-    private final MediatorRepository mediatorRepository;
     private final UserRepository userRepository;
     private final OrderMapper orderMapper;
 
     public OrderServiceImpl(final OrderRepository orderRepository,
-            final ProjectRepository projectRepository, final MediatorRepository mediatorRepository,
-            final UserRepository userRepository, final OrderMapper orderMapper) {
+            final ProjectRepository projectRepository, final UserRepository userRepository,
+            final OrderMapper orderMapper) {
         this.orderRepository = orderRepository;
         this.projectRepository = projectRepository;
-        this.mediatorRepository = mediatorRepository;
         this.userRepository = userRepository;
         this.orderMapper = orderMapper;
     }
@@ -49,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Long create(final OrderDTO orderDTO) {
         final Order order = new Order();
-        orderMapper.updateOrder(orderDTO, order, projectRepository, mediatorRepository, userRepository);
+        orderMapper.updateOrder(orderDTO, order, projectRepository, userRepository, userRepository);
         return orderRepository.save(order).getOrderId();
     }
 
@@ -57,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
     public void update(final Long orderId, final OrderDTO orderDTO) {
         final Order order = orderRepository.findById(orderId)
                 .orElseThrow(NotFoundException::new);
-        orderMapper.updateOrder(orderDTO, order, projectRepository, mediatorRepository, userRepository);
+        orderMapper.updateOrder(orderDTO, order, projectRepository, userRepository, userRepository);
         orderRepository.save(order);
     }
 

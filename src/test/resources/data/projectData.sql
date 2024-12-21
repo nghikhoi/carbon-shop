@@ -17,7 +17,7 @@ INSERT INTO projects (
     created_at,
     updated_at
 ) VALUES (
-    'a96e0a04-d20f-3096-bc64-dac2d639a577',
+    'a9b7ba70-783b-317e-9998-dc4dd82eb3c5',
     'Ullamcorper eget nulla facilisi etiam dignissim diam.',
     'Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.',
     'Quis nostrud exerci.',
@@ -55,7 +55,7 @@ INSERT INTO projects (
     created_at,
     updated_at
 ) VALUES (
-    'b8bff625-bdb0-3939-92c9-d4db0c6bbe45',
+    'b8c37e33-defd-351c-b91e-1e03e51657da',
     'Tortor consequat id porta nibh venenatis cras sed.',
     'Donec pretium vulputate sapien nec sagittis aliquam malesuada.',
     'Commodo consequat.',

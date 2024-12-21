@@ -10,12 +10,22 @@ import uit.carbon_shop.util.WebUtils;
 
 @Getter
 @Setter
-public class UserPasswordResetRequest {
+public class RegistrationRequest {
+
+    @NotNull
+    @Size(max = 72)
+    private String password;
+
+    @Size(max = 255)
+    private String name;
+
+    @Size(max = 255)
+    private String phone;
 
     @NotNull
     @Size(max = 255)
     @Email(regexp = WebUtils.EMAIL_PATTERN)
-    @UserPasswordResetRequestEmailExists
+    @RegistrationRequestEmailUnique
     private String email;
 
 }

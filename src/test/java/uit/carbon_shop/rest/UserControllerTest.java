@@ -14,7 +14,7 @@ public class UserControllerTest extends BaseIT {
     void newQuestion_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/userAskDTORequest.json"))
@@ -28,7 +28,7 @@ public class UserControllerTest extends BaseIT {
     void viewQuestions_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
                     .get("/api/user/questions")
@@ -40,7 +40,7 @@ public class UserControllerTest extends BaseIT {
     void viewAllProject_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
                     .get("/api/user/projects")

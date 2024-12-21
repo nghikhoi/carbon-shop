@@ -1,7 +1,6 @@
 package uit.carbon_shop.rest;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,41 +9,40 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import uit.carbon_shop.model.UserAuthenticationRequest;
-import uit.carbon_shop.model.UserAuthenticationResponse;
+import uit.carbon_shop.model.AuthenticationRequest;
+import uit.carbon_shop.model.AuthenticationResponse;
 import uit.carbon_shop.model.UserUserDetails;
 import uit.carbon_shop.service.UserTokenService;
 import uit.carbon_shop.service.UserUserDetailsService;
 
 
 @RestController
-public class UserAuthenticationResource {
+public class AuthenticationResource {
 
-    private final AuthenticationManager userAuthenticationManager;
+    private final AuthenticationManager authenticationManager;
     private final UserUserDetailsService userUserDetailsService;
     private final UserTokenService userTokenService;
 
-    public UserAuthenticationResource(
-            @Qualifier("userAuthenticationManager") final AuthenticationManager userAuthenticationManager,
+    public AuthenticationResource(final AuthenticationManager authenticationManager,
             final UserUserDetailsService userUserDetailsService,
             final UserTokenService userTokenService) {
-        this.userAuthenticationManager = userAuthenticationManager;
+        this.authenticationManager = authenticationManager;
         this.userUserDetailsService = userUserDetailsService;
         this.userTokenService = userTokenService;
     }
 
-    @PostMapping("/user/authenticate")
-    public UserAuthenticationResponse authenticate(
-            @RequestBody @Valid final UserAuthenticationRequest authenticationRequest) {
+    @PostMapping("/authenticate")
+    public AuthenticationResponse authenticate(
+            @RequestBody @Valid final AuthenticationRequest authenticationRequest) {
         try {
-            userAuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     authenticationRequest.getEmail(), authenticationRequest.getPassword()));
         } catch (final BadCredentialsException ex) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
         final UserUserDetails userDetails = userUserDetailsService.loadUserByUsername(authenticationRequest.getEmail());
-        final UserAuthenticationResponse authenticationResponse = new UserAuthenticationResponse();
+        final AuthenticationResponse authenticationResponse = new AuthenticationResponse();
         authenticationResponse.setAccessToken(userTokenService.generateToken(userDetails));
         return authenticationResponse;
     }

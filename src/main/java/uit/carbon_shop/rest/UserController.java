@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uit.carbon_shop.model.UserAskDTO;
-import uit.carbon_shop.util.UserRoles;
+import uit.carbon_shop.model.UserRole;
 
 
 @RestController
 @RequestMapping(value = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
-@PreAuthorize("hasAnyAuthority('" + UserRoles.BUYER + "', '" + UserRoles.SELLER + "')")
+@PreAuthorize("hasAnyAuthority('" + UserRole.Fields.SELLER_OR_BUYER + "', '" + UserRole.Fields.MEDIATOR + "')")
 @SecurityRequirement(name = "bearer-jwt")
 public class UserController {
 

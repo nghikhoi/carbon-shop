@@ -6,7 +6,7 @@ INSERT INTO project_reviews (
     created_at,
     updated_at
 ) VALUES (
-    1800,
+    1600,
     'Ut wisi enim.',
     88,
     '[96]',
@@ -22,7 +22,7 @@ INSERT INTO project_reviews (
     created_at,
     updated_at
 ) VALUES (
-    1801,
+    1601,
     'Nam liber tempor.',
     89,
     '[95]',

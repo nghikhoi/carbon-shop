@@ -25,7 +25,7 @@ public class ProjectResourceTest extends BaseIT {
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("page.totalElements", Matchers.equalTo(2))
-                    .body("content.get(0).projectId", Matchers.equalTo("a96e0a04-d20f-3096-bc64-dac2d639a577"));
+                    .body("content.get(0).projectId", Matchers.equalTo("a9b7ba70-783b-317e-9998-dc4dd82eb3c5"));
     }
 
     @Test
@@ -35,11 +35,11 @@ public class ProjectResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/projects?filter=b8bff625-bdb0-3939-92c9-d4db0c6bbe45")
+                    .get("/api/projects?filter=b8c37e33-defd-351c-b91e-1e03e51657da")
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("page.totalElements", Matchers.equalTo(1))
-                    .body("content.get(0).projectId", Matchers.equalTo("b8bff625-bdb0-3939-92c9-d4db0c6bbe45"));
+                    .body("content.get(0).projectId", Matchers.equalTo("b8c37e33-defd-351c-b91e-1e03e51657da"));
     }
 
     @Test
@@ -49,7 +49,7 @@ public class ProjectResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/projects/a96e0a04-d20f-3096-bc64-dac2d639a577")
+                    .get("/api/projects/a9b7ba70-783b-317e-9998-dc4dd82eb3c5")
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("name", Matchers.equalTo("Ullamcorper eget nulla facilisi etiam dignissim diam."));
@@ -61,7 +61,7 @@ public class ProjectResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/projects/23a93ba8-9a5b-3c6c-a26e-49b88973f46e")
+                    .get("/api/projects/23d7c8a0-8b4a-3a1b-87c5-99473f5dddda")
                 .then()
                     .statusCode(HttpStatus.NOT_FOUND.value())
                     .body("code", Matchers.equalTo("NOT_FOUND"));
@@ -90,10 +90,10 @@ public class ProjectResourceTest extends BaseIT {
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/projectDTORequest.json"))
                 .when()
-                    .put("/api/projects/a96e0a04-d20f-3096-bc64-dac2d639a577")
+                    .put("/api/projects/a9b7ba70-783b-317e-9998-dc4dd82eb3c5")
                 .then()
                     .statusCode(HttpStatus.OK.value());
-        assertEquals("Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.", projectRepository.findById(UUID.fromString("a96e0a04-d20f-3096-bc64-dac2d639a577")).orElseThrow().getName());
+        assertEquals("Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.", projectRepository.findById(UUID.fromString("a9b7ba70-783b-317e-9998-dc4dd82eb3c5")).orElseThrow().getName());
         assertEquals(2, projectRepository.count());
     }
 
@@ -104,7 +104,7 @@ public class ProjectResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .delete("/api/projects/a96e0a04-d20f-3096-bc64-dac2d639a577")
+                    .delete("/api/projects/a9b7ba70-783b-317e-9998-dc4dd82eb3c5")
                 .then()
                     .statusCode(HttpStatus.NO_CONTENT.value());
         assertEquals(1, projectRepository.count());

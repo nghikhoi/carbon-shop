@@ -8,8 +8,6 @@ DELETE FROM companies;
 
 DELETE FROM users;
 
-DELETE FROM mediators;
-
 DELETE FROM file_documents;
 
 DELETE FROM company_reviews;

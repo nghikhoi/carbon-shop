@@ -4,32 +4,34 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uit.carbon_shop.domain.User;
-import uit.carbon_shop.model.UserRegistrationRequest;
+import uit.carbon_shop.model.RegistrationRequest;
+import uit.carbon_shop.model.UserRole;
 import uit.carbon_shop.repos.UserRepository;
 
 
 @Service
 @Slf4j
-public class UserRegistrationService {
+public class RegistrationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserRegistrationService(final UserRepository userRepository,
+    public RegistrationService(final UserRepository userRepository,
             final PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void register(final UserRegistrationRequest userRegistrationRequest) {
-        log.info("registering new user: {}", userRegistrationRequest.getEmail());
+    public void register(final RegistrationRequest registrationRequest) {
+        log.info("registering new user: {}", registrationRequest.getEmail());
 
         final User user = new User();
-        user.setPassword(passwordEncoder.encode(userRegistrationRequest.getPassword()));
-        user.setPasswordSalt(userRegistrationRequest.getPasswordSalt());
-        user.setName(userRegistrationRequest.getName());
-        user.setPhone(userRegistrationRequest.getPhone());
-        user.setEmail(userRegistrationRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
+        user.setName(registrationRequest.getName());
+        user.setPhone(registrationRequest.getPhone());
+        user.setEmail(registrationRequest.getEmail());
+        // assign default role
+        user.setRole(UserRole.SELLER_OR_BUYER);
         userRepository.save(user);
     }
 

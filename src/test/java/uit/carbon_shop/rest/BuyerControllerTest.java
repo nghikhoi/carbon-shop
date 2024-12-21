@@ -14,7 +14,7 @@ public class BuyerControllerTest extends BaseIT {
     void viewProject_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
                     .get("/api/buyer/project/test-projectId")
@@ -26,7 +26,7 @@ public class BuyerControllerTest extends BaseIT {
     void reviewProject_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/buyerReviewProjectRequest.json"))
@@ -40,7 +40,7 @@ public class BuyerControllerTest extends BaseIT {
     void viewAllProject_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
                     .get("/api/buyer/projects")
@@ -52,7 +52,7 @@ public class BuyerControllerTest extends BaseIT {
     void viewOrder_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
                     .get("/api/buyer/order/test-orderId")
@@ -64,7 +64,7 @@ public class BuyerControllerTest extends BaseIT {
     void newOrder_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/buyerCreateOrderRequest.json"))
@@ -78,7 +78,7 @@ public class BuyerControllerTest extends BaseIT {
     void viewAllOrders_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
                     .get("/api/buyer/orders")
@@ -90,7 +90,7 @@ public class BuyerControllerTest extends BaseIT {
     void viewCompany_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                 .when()
                     .get("/api/buyer/company/test-companyId")
@@ -102,7 +102,7 @@ public class BuyerControllerTest extends BaseIT {
     void reviewCompany_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, buyerUserToken())
+                    .header(HttpHeaders.AUTHORIZATION, sellerOrBuyerUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/buyerReviewCompanyRequest.json"))

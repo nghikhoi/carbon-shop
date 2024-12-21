@@ -8,21 +8,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import uit.carbon_shop.domain.User;
-import uit.carbon_shop.model.UserPasswordResetCompleteRequest;
-import uit.carbon_shop.model.UserPasswordResetRequest;
+import uit.carbon_shop.model.PasswordResetCompleteRequest;
+import uit.carbon_shop.model.PasswordResetRequest;
 import uit.carbon_shop.repos.UserRepository;
 import uit.carbon_shop.util.WebUtils;
 
 
 @Service
 @Slf4j
-public class UserPasswordResetService {
+public class PasswordResetService {
 
     private final MailService mailService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    public UserPasswordResetService(final MailService mailService,
+    public PasswordResetService(final MailService mailService,
             final PasswordEncoder passwordEncoder, final UserRepository userRepository) {
         this.mailService = mailService;
         this.passwordEncoder = passwordEncoder;
@@ -34,7 +34,7 @@ public class UserPasswordResetService {
                 user.getResetPasswordStart().plusWeeks(1).isAfter(OffsetDateTime.now());
     }
 
-    public void startProcess(final UserPasswordResetRequest passwordResetRequest) {
+    public void startProcess(final PasswordResetRequest passwordResetRequest) {
         log.info("received password reset request for {}", passwordResetRequest.getEmail());
 
         final User user = userRepository.findByEmailIgnoreCase(passwordResetRequest.getEmail());
@@ -51,7 +51,7 @@ public class UserPasswordResetService {
         userRepository.save(user);
 
         mailService.sendMail(passwordResetRequest.getEmail(), WebUtils.getMessage("passwordReset.mail.subject"),
-                WebUtils.renderTemplate("/mails/userPasswordReset", Collections.singletonMap("passwordResetUid", user.getResetPasswordUid())));
+                WebUtils.renderTemplate("/mails/passwordReset", Collections.singletonMap("passwordResetUid", user.getResetPasswordUid())));
     }
 
     public boolean isValidPasswordResetUid(final String passwordResetUid) {
@@ -63,14 +63,13 @@ public class UserPasswordResetService {
         return false;
     }
 
-    public void completeProcess(
-            final UserPasswordResetCompleteRequest userPasswordResetCompleteRequest) {
-        final User user = userRepository.findByResetPasswordUid(userPasswordResetCompleteRequest.getUid());
+    public void completeProcess(final PasswordResetCompleteRequest passwordResetCompleteRequest) {
+        final User user = userRepository.findByResetPasswordUid(passwordResetCompleteRequest.getUid());
         Assert.isTrue(hasValidRequest(user), "invalid update password request");
 
         log.warn("updating password for user {}", user.getEmail());
 
-        user.setPassword(passwordEncoder.encode(userPasswordResetCompleteRequest.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(passwordResetCompleteRequest.getNewPassword()));
         user.setResetPasswordUid(null);
         user.setResetPasswordStart(null);
         userRepository.save(user);

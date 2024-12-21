@@ -43,10 +43,8 @@ error:
       org.springframework.security.authorization.AuthorizationDeniedException: unauthorized
     codes:
       UserCompanyUnique: USER_COMPANY_UNIQUE
-      UserPasswordResetRequestEmailExists: USER_PASSWORD_RESET_REQUEST_EMAIL_EXISTS
-      UserRegistrationRequestEmailUnique: USER_REGISTRATION_REQUEST_EMAIL_UNIQUE
-      MediatorPasswordResetRequestEmailExists: MEDIATOR_PASSWORD_RESET_REQUEST_EMAIL_EXISTS
-      MediatorRegistrationRequestEmailUnique: MEDIATOR_REGISTRATION_REQUEST_EMAIL_UNIQUE
+      PasswordResetRequestEmailExists: PASSWORD_RESET_REQUEST_EMAIL_EXISTS
+      RegistrationRequestEmailUnique: REGISTRATION_REQUEST_EMAIL_UNIQUE
 management:
   endpoints:
     web:
@@ -56,13 +54,10 @@ management:
     health:
       show-details: always
 springdoc:
-  pathsToMatch: /, /api/**, /user/authenticate, /user/passwordReset/**, /user/register,
-    /mediator/authenticate, /mediator/passwordReset/**, /mediator/register
+  pathsToMatch: /, /api/**, /authenticate, /passwordReset/**, /register
 app:
   baseHost: ${BASE_HOST:http://localhost:null}
   mail:
     from: <<YOUR_EMAIL>>
 user:
-  secret: 00E3D352AA2F8F7163260ED36A5451AF
-mediator:
   secret: 00E3D352AA2F8F7163260ED36A5451AF

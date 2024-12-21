@@ -12,7 +12,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import uit.carbon_shop.service.MediatorRegistrationService;
+import uit.carbon_shop.service.RegistrationService;
 
 
 /**
@@ -22,9 +22,9 @@ import uit.carbon_shop.service.MediatorRegistrationService;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(
-        validatedBy = MediatorRegistrationRequestEmailUnique.MediatorRegistrationRequestEmailUniqueValidator.class
+        validatedBy = RegistrationRequestEmailUnique.RegistrationRequestEmailUniqueValidator.class
 )
-public @interface MediatorRegistrationRequestEmailUnique {
+public @interface RegistrationRequestEmailUnique {
 
     String message() default "{registration.register.taken}";
 
@@ -32,13 +32,13 @@ public @interface MediatorRegistrationRequestEmailUnique {
 
     Class<? extends Payload>[] payload() default {};
 
-    class MediatorRegistrationRequestEmailUniqueValidator implements ConstraintValidator<MediatorRegistrationRequestEmailUnique, String> {
+    class RegistrationRequestEmailUniqueValidator implements ConstraintValidator<RegistrationRequestEmailUnique, String> {
 
-        private final MediatorRegistrationService mediatorRegistrationService;
+        private final RegistrationService registrationService;
 
-        public MediatorRegistrationRequestEmailUniqueValidator(
-                final MediatorRegistrationService mediatorRegistrationService) {
-            this.mediatorRegistrationService = mediatorRegistrationService;
+        public RegistrationRequestEmailUniqueValidator(
+                final RegistrationService registrationService) {
+            this.registrationService = registrationService;
         }
 
         @Override
@@ -47,7 +47,7 @@ public @interface MediatorRegistrationRequestEmailUnique {
                 // no value present
                 return true;
             }
-            return !mediatorRegistrationService.emailExists(value);
+            return !registrationService.emailExists(value);
         }
 
     }

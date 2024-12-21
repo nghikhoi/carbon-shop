@@ -1,8 +1,10 @@
 package uit.carbon_shop.rest;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,10 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 import uit.carbon_shop.model.ProjectDTO;
 import uit.carbon_shop.model.SellerRegisterProjectDTO;
 import uit.carbon_shop.model.SellerReviewCompany;
+import uit.carbon_shop.model.UserRole;
 
 
 @RestController
 @RequestMapping(value = "/api/seller", produces = MediaType.APPLICATION_JSON_VALUE)
+@PreAuthorize("hasAuthority('" + UserRole.Fields.SELLER_OR_BUYER + "')")
+@SecurityRequirement(name = "bearer-jwt")
 public class SellerController {
 
     @PostMapping("/project")

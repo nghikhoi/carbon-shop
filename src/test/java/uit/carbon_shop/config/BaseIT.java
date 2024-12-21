@@ -24,7 +24,6 @@ import uit.carbon_shop.CarbonShopApplication;
 import uit.carbon_shop.repos.CompanyRepository;
 import uit.carbon_shop.repos.CompanyReviewRepository;
 import uit.carbon_shop.repos.FileDocumentRepository;
-import uit.carbon_shop.repos.MediatorRepository;
 import uit.carbon_shop.repos.OrderRepository;
 import uit.carbon_shop.repos.ProjectRepository;
 import uit.carbon_shop.repos.ProjectReviewRepository;
@@ -41,7 +40,7 @@ import uit.carbon_shop.repos.UserRepository;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @ActiveProfiles("it")
-@Sql({"/data/clearAll.sql", "/data/mediatorData.sql", "/data/userData.sql"})
+@Sql({"/data/clearAll.sql", "/data/userData.sql"})
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 public abstract class BaseIT {
 
@@ -78,9 +77,6 @@ public abstract class BaseIT {
 
     @Autowired
     public UserRepository userRepository;
-
-    @Autowired
-    public MediatorRepository mediatorRepository;
 
     @Autowired
     public FileDocumentRepository fileDocumentRepository;
@@ -138,21 +134,14 @@ public abstract class BaseIT {
         throw new RuntimeException("Could not find " + total + " messages in time.");
     }
 
-    public String buyerUserToken() {
-        // user buyer@invalid.bootify.io, expires 2040-01-01
+    public String sellerOrBuyerUserToken() {
+        // user sellerOrBuyer@invalid.bootify.io, expires 2040-01-01
         return "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9." +
-                "eyJzdWIiOiJidXllckBpbnZhbGlkLmJvb3RpZnkuaW8iLCJyb2xlcyI6WyJCVVlFUiJdLCJpc3MiOiJib290aWZ5IiwiaWF0IjoxNzMwMDEyOTQzLCJleHAiOjIyMDg5ODg4MDB9." +
-                "TjaeweGpC3B4d2Ksx53RVdfehKgt4GL38f3COs-c1NMyMN-9pW9R3pPlA5g4YhAlUwC48pcad50C5hXqHrrNVA";
+                "eyJzdWIiOiJzZWxsZXJPckJ1eWVyQGludmFsaWQuYm9vdGlmeS5pbyIsInJvbGVzIjpbIlNFTExFUl9PUl9CVVlFUiJdLCJpc3MiOiJib290aWZ5IiwiaWF0IjoxNzMwMDEyOTQzLCJleHAiOjIyMDg5ODg4MDB9." +
+                "SWaqt9_3DcPr3_aXUiw_RxZDkz_DRa4Vbtv6DYge-juDSe89THJ3cpdJC8XJu-fiTbh10nDGeDY5HgAiokdmjA";
     }
 
-    public String sellerUserToken() {
-        // user seller@invalid.bootify.io, expires 2040-01-01
-        return "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9." +
-                "eyJzdWIiOiJzZWxsZXJAaW52YWxpZC5ib290aWZ5LmlvIiwicm9sZXMiOlsiU0VMTEVSIl0sImlzcyI6ImJvb3RpZnkiLCJpYXQiOjE3MzAwMTI5NDMsImV4cCI6MjIwODk4ODgwMH0." +
-                "190bmpuTahUm-10DY8EDvUFbG4JNzfNmMwEa6IjJjDn2ZfTD4g0FEza3Iu6FmVcAeKVoyBDVAVyj-0hI0obRgA";
-    }
-
-    public String mediatorMediatorToken() {
+    public String mediatorUserToken() {
         // user mediator@invalid.bootify.io, expires 2040-01-01
         return "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9." +
                 "eyJzdWIiOiJtZWRpYXRvckBpbnZhbGlkLmJvb3RpZnkuaW8iLCJyb2xlcyI6WyJNRURJQVRPUiJdLCJpc3MiOiJib290aWZ5IiwiaWF0IjoxNzMwMDEyOTQzLCJleHAiOjIyMDg5ODg4MDB9." +

@@ -14,7 +14,7 @@ public class MediatorAuditControllerTest extends BaseIT {
     void startProcessOrder_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, mediatorMediatorToken())
+                    .header(HttpHeaders.AUTHORIZATION, mediatorUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/mediatorProcessOrderDTORequest.json"))
@@ -28,7 +28,7 @@ public class MediatorAuditControllerTest extends BaseIT {
     void cancelProcessOrder_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, mediatorMediatorToken())
+                    .header(HttpHeaders.AUTHORIZATION, mediatorUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/mediatorCancelOrderDTORequest.json"))
@@ -42,7 +42,7 @@ public class MediatorAuditControllerTest extends BaseIT {
     void doneProcessOrder_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, mediatorMediatorToken())
+                    .header(HttpHeaders.AUTHORIZATION, mediatorUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/mediatorDoneOrderDTORequest.json"))
@@ -56,7 +56,7 @@ public class MediatorAuditControllerTest extends BaseIT {
     void approveUserRegistration_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, mediatorMediatorToken())
+                    .header(HttpHeaders.AUTHORIZATION, mediatorUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/mediatorApproveUserDTORequest.json"))
@@ -70,7 +70,7 @@ public class MediatorAuditControllerTest extends BaseIT {
     void rejectUserRegistration_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, mediatorMediatorToken())
+                    .header(HttpHeaders.AUTHORIZATION, mediatorUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/mediatorRejectUserDTORequest.json"))
@@ -84,7 +84,7 @@ public class MediatorAuditControllerTest extends BaseIT {
     void approveProject_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, mediatorMediatorToken())
+                    .header(HttpHeaders.AUTHORIZATION, mediatorUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/mediatorApproveProjectDTORequest.json"))
@@ -98,7 +98,7 @@ public class MediatorAuditControllerTest extends BaseIT {
     void rejectProject_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, mediatorMediatorToken())
+                    .header(HttpHeaders.AUTHORIZATION, mediatorUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/mediatorRejectProjectDTORequest.json"))
@@ -112,7 +112,7 @@ public class MediatorAuditControllerTest extends BaseIT {
     void answerQuestion_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, mediatorMediatorToken())
+                    .header(HttpHeaders.AUTHORIZATION, mediatorUserToken())
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/mediatorAnswerDTORequest.json"))
@@ -126,7 +126,7 @@ public class MediatorAuditControllerTest extends BaseIT {
     void deleteQuestionAnswer_success() {
         RestAssured
                 .given()
-                    .header(HttpHeaders.AUTHORIZATION, mediatorMediatorToken())
+                    .header(HttpHeaders.AUTHORIZATION, mediatorUserToken())
                     .accept(ContentType.JSON)
                 .when()
                     .delete("/api/mediator/audit/question/test-questionId/answer")
