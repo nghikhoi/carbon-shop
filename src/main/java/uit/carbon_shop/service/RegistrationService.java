@@ -30,6 +30,7 @@ public class RegistrationService {
         appUser.setName(registrationRequest.getName());
         appUser.setPhone(registrationRequest.getPhone());
         appUser.setEmail(registrationRequest.getEmail());
+        appUser.setApprovedAt(registrationRequest.getApprovedAt());
         // assign default role
         appUser.setRole(UserRole.SELLER_OR_BUYER);
         appUserRepository.save(appUser);

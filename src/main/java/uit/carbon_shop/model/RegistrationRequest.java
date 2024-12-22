@@ -3,6 +3,7 @@ package uit.carbon_shop.model;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import uit.carbon_shop.util.WebUtils;
@@ -27,5 +28,7 @@ public class RegistrationRequest {
     @Email(regexp = WebUtils.EMAIL_PATTERN)
     @RegistrationRequestEmailUnique
     private String email;
+
+    private LocalDateTime approvedAt;
 
 }

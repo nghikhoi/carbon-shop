@@ -16,6 +16,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Set;
 import lombok.Getter;
@@ -68,6 +69,9 @@ public class AppUser {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @Column
+    private LocalDateTime approvedAt;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", unique = true)

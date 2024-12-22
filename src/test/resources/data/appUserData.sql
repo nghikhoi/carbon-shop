@@ -5,6 +5,7 @@ INSERT INTO app_users (
     phone,
     email,
     role,
+    approved_at,
     created_at,
     updated_at
 ) VALUES (
@@ -14,6 +15,7 @@ INSERT INTO app_users (
     'Viverra suspendisse.',
     'sellerOrBuyer@invalid.bootify.io',
     'SELLER_OR_BUYER',
+    '2024-05-06 14:30:00',
     '2024-09-02 14:30:00',
     '2024-09-02 14:30:00'
 );
@@ -25,6 +27,7 @@ INSERT INTO app_users (
     phone,
     email,
     role,
+    approved_at,
     created_at,
     updated_at
 ) VALUES (
@@ -34,6 +37,7 @@ INSERT INTO app_users (
     'Nec ullamcorper.',
     'mediator@invalid.bootify.io',
     'MEDIATOR',
+    '2024-05-07 14:30:00',
     '2024-09-03 14:30:00',
     '2024-09-03 14:30:00'
 );
