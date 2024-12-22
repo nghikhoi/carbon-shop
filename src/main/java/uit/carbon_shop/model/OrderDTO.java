@@ -2,7 +2,6 @@ package uit.carbon_shop.model;
 
 import jakarta.validation.constraints.Size;
 import java.util.List;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,10 +31,10 @@ public class OrderDTO {
 
     private List<Long> certImages;
 
-    private UUID project;
+    private Long project;
 
-    private UUID processBy;
+    private Long processBy;
 
-    private UUID createdBy;
+    private Long createdBy;
 
 }

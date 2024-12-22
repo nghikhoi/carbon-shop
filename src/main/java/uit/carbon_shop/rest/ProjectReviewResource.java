@@ -22,20 +22,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uit.carbon_shop.model.AppUserDTO;
-import uit.carbon_shop.service.AppUserService;
-import uit.carbon_shop.util.ReferencedException;
-import uit.carbon_shop.util.ReferencedWarning;
+import uit.carbon_shop.model.ProjectReviewDTO;
+import uit.carbon_shop.service.ProjectReviewService;
 
 
 @RestController
-@RequestMapping(value = "/api/appUsers", produces = MediaType.APPLICATION_JSON_VALUE)
-public class AppUserResource {
+@RequestMapping(value = "/api/projectReviews", produces = MediaType.APPLICATION_JSON_VALUE)
+public class ProjectReviewResource {
 
-    private final AppUserService appUserService;
+    private final ProjectReviewService projectReviewService;
 
-    public AppUserResource(final AppUserService appUserService) {
-        this.appUserService = appUserService;
+    public ProjectReviewResource(final ProjectReviewService projectReviewService) {
+        this.projectReviewService = projectReviewService;
     }
 
     @Operation(
@@ -58,39 +56,37 @@ public class AppUserResource {
             }
     )
     @GetMapping
-    public ResponseEntity<Page<AppUserDTO>> getAllAppUsers(
+    public ResponseEntity<Page<ProjectReviewDTO>> getAllProjectReviews(
             @RequestParam(name = "filter", required = false) final String filter,
-            @Parameter(hidden = true) @SortDefault(sort = "userId") @PageableDefault(size = 20) final Pageable pageable) {
-        return ResponseEntity.ok(appUserService.findAll(filter, pageable));
+            @Parameter(hidden = true) @SortDefault(sort = "id") @PageableDefault(size = 20) final Pageable pageable) {
+        return ResponseEntity.ok(projectReviewService.findAll(filter, pageable));
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<AppUserDTO> getAppUser(@PathVariable(name = "userId") final Long userId) {
-        return ResponseEntity.ok(appUserService.get(userId));
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjectReviewDTO> getProjectReview(
+            @PathVariable(name = "id") final Long id) {
+        return ResponseEntity.ok(projectReviewService.get(id));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> createAppUser(@RequestBody @Valid final AppUserDTO appUserDTO) {
-        final Long createdUserId = appUserService.create(appUserDTO);
-        return new ResponseEntity<>(createdUserId, HttpStatus.CREATED);
+    public ResponseEntity<Long> createProjectReview(
+            @RequestBody @Valid final ProjectReviewDTO projectReviewDTO) {
+        final Long createdId = projectReviewService.create(projectReviewDTO);
+        return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<Long> updateAppUser(@PathVariable(name = "userId") final Long userId,
-            @RequestBody @Valid final AppUserDTO appUserDTO) {
-        appUserService.update(userId, appUserDTO);
-        return ResponseEntity.ok(userId);
+    @PutMapping("/{id}")
+    public ResponseEntity<Long> updateProjectReview(@PathVariable(name = "id") final Long id,
+            @RequestBody @Valid final ProjectReviewDTO projectReviewDTO) {
+        projectReviewService.update(id, projectReviewDTO);
+        return ResponseEntity.ok(id);
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
-    public ResponseEntity<Void> deleteAppUser(@PathVariable(name = "userId") final Long userId) {
-        final ReferencedWarning referencedWarning = appUserService.getReferencedWarning(userId);
-        if (referencedWarning != null) {
-            throw new ReferencedException(referencedWarning);
-        }
-        appUserService.delete(userId);
+    public ResponseEntity<Void> deleteProjectReview(@PathVariable(name = "id") final Long id) {
+        projectReviewService.delete(id);
         return ResponseEntity.noContent().build();
     }
 

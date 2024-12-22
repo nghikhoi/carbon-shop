@@ -14,7 +14,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Map;
-import java.util.UUID;
 import org.springframework.web.servlet.HandlerMapping;
 import uit.carbon_shop.service.AppUserService;
 
@@ -36,7 +35,7 @@ public @interface AppUserCompanyUnique {
 
     Class<? extends Payload>[] payload() default {};
 
-    class AppUserCompanyUniqueValidator implements ConstraintValidator<AppUserCompanyUnique, UUID> {
+    class AppUserCompanyUniqueValidator implements ConstraintValidator<AppUserCompanyUnique, Long> {
 
         private final AppUserService appUserService;
         private final HttpServletRequest request;
@@ -48,7 +47,7 @@ public @interface AppUserCompanyUnique {
         }
 
         @Override
-        public boolean isValid(final UUID value, final ConstraintValidatorContext cvContext) {
+        public boolean isValid(final Long value, final ConstraintValidatorContext cvContext) {
             if (value == null) {
                 // no value present
                 return true;
@@ -56,7 +55,7 @@ public @interface AppUserCompanyUnique {
             @SuppressWarnings("unchecked") final Map<String, String> pathVariables =
                     ((Map<String, String>)request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE));
             final String currentId = pathVariables.get("userId");
-            if (currentId != null && value.equals(appUserService.get(UUID.fromString(currentId)).getCompany())) {
+            if (currentId != null && value.equals(appUserService.get(Long.parseLong(currentId)).getCompany())) {
                 // value hasn't changed
                 return true;
             }

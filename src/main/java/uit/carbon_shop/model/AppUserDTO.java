@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import uit.carbon_shop.util.WebUtils;
@@ -15,7 +14,7 @@ import uit.carbon_shop.util.WebUtils;
 @Setter
 public class AppUserDTO {
 
-    private UUID userId;
+    private Long userId;
 
     @NotNull
     @Size(max = 255)
@@ -40,8 +39,8 @@ public class AppUserDTO {
     private UserRole role;
 
     @AppUserCompanyUnique
-    private UUID company;
+    private Long company;
 
-    private List<UUID> favoriteProjects;
+    private List<Long> favoriteProjects;
 
 }

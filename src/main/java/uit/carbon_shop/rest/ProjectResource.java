@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -67,20 +66,20 @@ public class ProjectResource {
 
     @GetMapping("/{projectId}")
     public ResponseEntity<ProjectDTO> getProject(
-            @PathVariable(name = "projectId") final UUID projectId) {
+            @PathVariable(name = "projectId") final Long projectId) {
         return ResponseEntity.ok(projectService.get(projectId));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<UUID> createProject(@RequestBody @Valid final ProjectDTO projectDTO) {
-        final UUID createdProjectId = projectService.create(projectDTO);
+    public ResponseEntity<Long> createProject(@RequestBody @Valid final ProjectDTO projectDTO) {
+        final Long createdProjectId = projectService.create(projectDTO);
         return new ResponseEntity<>(createdProjectId, HttpStatus.CREATED);
     }
 
     @PutMapping("/{projectId}")
-    public ResponseEntity<UUID> updateProject(
-            @PathVariable(name = "projectId") final UUID projectId,
+    public ResponseEntity<Long> updateProject(
+            @PathVariable(name = "projectId") final Long projectId,
             @RequestBody @Valid final ProjectDTO projectDTO) {
         projectService.update(projectId, projectDTO);
         return ResponseEntity.ok(projectId);
@@ -89,7 +88,7 @@ public class ProjectResource {
     @DeleteMapping("/{projectId}")
     @ApiResponse(responseCode = "204")
     public ResponseEntity<Void> deleteProject(
-            @PathVariable(name = "projectId") final UUID projectId) {
+            @PathVariable(name = "projectId") final Long projectId) {
         final ReferencedWarning referencedWarning = projectService.getReferencedWarning(projectId);
         if (referencedWarning != null) {
             throw new ReferencedException(referencedWarning);

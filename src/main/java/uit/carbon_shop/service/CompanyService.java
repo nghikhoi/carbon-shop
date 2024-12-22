@@ -1,6 +1,5 @@
 package uit.carbon_shop.service;
 
-import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -41,13 +40,13 @@ public class CompanyService {
     public Page<CompanyDTO> findAll(final String filter, final Pageable pageable) {
         Page<Company> page;
         if (filter != null) {
-            UUID uuidFilter = null;
+            Long longFilter = null;
             try {
-                uuidFilter = UUID.fromString(filter);
-            } catch (final IllegalArgumentException illegalArgumentException) {
+                longFilter = Long.parseLong(filter);
+            } catch (final NumberFormatException numberFormatException) {
                 // keep null - no parseable input
             }
-            page = companyRepository.findAllById(uuidFilter, pageable);
+            page = companyRepository.findAllById(longFilter, pageable);
         } else {
             page = companyRepository.findAll(pageable);
         }
@@ -58,30 +57,30 @@ public class CompanyService {
                 pageable, page.getTotalElements());
     }
 
-    public CompanyDTO get(final UUID id) {
+    public CompanyDTO get(final Long id) {
         return companyRepository.findById(id)
                 .map(company -> companyMapper.updateCompanyDTO(company, new CompanyDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
-    public UUID create(final CompanyDTO companyDTO) {
+    public Long create(final CompanyDTO companyDTO) {
         final Company company = new Company();
         companyMapper.updateCompany(companyDTO, company);
         return companyRepository.save(company).getId();
     }
 
-    public void update(final UUID id, final CompanyDTO companyDTO) {
+    public void update(final Long id, final CompanyDTO companyDTO) {
         final Company company = companyRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
         companyMapper.updateCompany(companyDTO, company);
         companyRepository.save(company);
     }
 
-    public void delete(final UUID id) {
+    public void delete(final Long id) {
         companyRepository.deleteById(id);
     }
 
-    public ReferencedWarning getReferencedWarning(final UUID id) {
+    public ReferencedWarning getReferencedWarning(final Long id) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Company company = companyRepository.findById(id)
                 .orElseThrow(NotFoundException::new);

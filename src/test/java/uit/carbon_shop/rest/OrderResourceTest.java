@@ -23,8 +23,22 @@ public class OrderResourceTest extends BaseIT {
                     .get("/api/orders")
                 .then()
                     .statusCode(HttpStatus.OK.value())
-                    .body("size()", Matchers.equalTo(2))
-                    .body("get(0).orderId", Matchers.equalTo(1100));
+                    .body("page.totalElements", Matchers.equalTo(2))
+                    .body("content.get(0).orderId", Matchers.equalTo(1100));
+    }
+
+    @Test
+    @Sql("/data/orderData.sql")
+    void getAllOrders_filtered() {
+        RestAssured
+                .given()
+                    .accept(ContentType.JSON)
+                .when()
+                    .get("/api/orders?filter=1101")
+                .then()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("page.totalElements", Matchers.equalTo(1))
+                    .body("content.get(0).orderId", Matchers.equalTo(1101));
     }
 
     @Test

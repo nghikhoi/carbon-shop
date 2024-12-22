@@ -11,102 +11,102 @@ import org.springframework.test.context.jdbc.Sql;
 import uit.carbon_shop.config.BaseIT;
 
 
-public class ProjectResourceTest extends BaseIT {
+public class ProjectReviewResourceTest extends BaseIT {
 
     @Test
-    @Sql("/data/projectData.sql")
-    void getAllProjects_success() {
+    @Sql("/data/projectReviewData.sql")
+    void getAllProjectReviews_success() {
         RestAssured
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/projects")
+                    .get("/api/projectReviews")
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("page.totalElements", Matchers.equalTo(2))
-                    .body("content.get(0).projectId", Matchers.equalTo(1000));
+                    .body("content.get(0).id", Matchers.equalTo(1600));
     }
 
     @Test
-    @Sql("/data/projectData.sql")
-    void getAllProjects_filtered() {
+    @Sql("/data/projectReviewData.sql")
+    void getAllProjectReviews_filtered() {
         RestAssured
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/projects?filter=1001")
+                    .get("/api/projectReviews?filter=1601")
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("page.totalElements", Matchers.equalTo(1))
-                    .body("content.get(0).projectId", Matchers.equalTo(1001));
+                    .body("content.get(0).id", Matchers.equalTo(1601));
     }
 
     @Test
-    @Sql("/data/projectData.sql")
-    void getProject_success() {
+    @Sql("/data/projectReviewData.sql")
+    void getProjectReview_success() {
         RestAssured
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/projects/1000")
+                    .get("/api/projectReviews/1600")
                 .then()
                     .statusCode(HttpStatus.OK.value())
-                    .body("name", Matchers.equalTo("Ullamcorper eget nulla facilisi etiam dignissim diam."));
+                    .body("message", Matchers.equalTo("Ut wisi enim."));
     }
 
     @Test
-    void getProject_notFound() {
+    void getProjectReview_notFound() {
         RestAssured
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/projects/1666")
+                    .get("/api/projectReviews/2266")
                 .then()
                     .statusCode(HttpStatus.NOT_FOUND.value())
                     .body("code", Matchers.equalTo("NOT_FOUND"));
     }
 
     @Test
-    void createProject_success() {
+    void createProjectReview_success() {
         RestAssured
                 .given()
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
-                    .body(readResource("/requests/projectDTORequest.json"))
+                    .body(readResource("/requests/projectReviewDTORequest.json"))
                 .when()
-                    .post("/api/projects")
+                    .post("/api/projectReviews")
                 .then()
                     .statusCode(HttpStatus.CREATED.value());
-        assertEquals(1, projectRepository.count());
+        assertEquals(1, projectReviewRepository.count());
     }
 
     @Test
-    @Sql("/data/projectData.sql")
-    void updateProject_success() {
+    @Sql("/data/projectReviewData.sql")
+    void updateProjectReview_success() {
         RestAssured
                 .given()
                     .accept(ContentType.JSON)
                     .contentType(ContentType.JSON)
-                    .body(readResource("/requests/projectDTORequest.json"))
+                    .body(readResource("/requests/projectReviewDTORequest.json"))
                 .when()
-                    .put("/api/projects/1000")
+                    .put("/api/projectReviews/1600")
                 .then()
                     .statusCode(HttpStatus.OK.value());
-        assertEquals("Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.", projectRepository.findById(((long)1000)).orElseThrow().getName());
-        assertEquals(2, projectRepository.count());
+        assertEquals("Viverra suspendisse.", projectReviewRepository.findById(((long)1600)).orElseThrow().getMessage());
+        assertEquals(2, projectReviewRepository.count());
     }
 
     @Test
-    @Sql("/data/projectData.sql")
-    void deleteProject_success() {
+    @Sql("/data/projectReviewData.sql")
+    void deleteProjectReview_success() {
         RestAssured
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .delete("/api/projects/1000")
+                    .delete("/api/projectReviews/1600")
                 .then()
                     .statusCode(HttpStatus.NO_CONTENT.value());
-        assertEquals(1, projectRepository.count());
+        assertEquals(1, projectReviewRepository.count());
     }
 
 }

@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -66,19 +65,19 @@ public class CompanyResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CompanyDTO> getCompany(@PathVariable(name = "id") final UUID id) {
+    public ResponseEntity<CompanyDTO> getCompany(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(companyService.get(id));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<UUID> createCompany(@RequestBody @Valid final CompanyDTO companyDTO) {
-        final UUID createdId = companyService.create(companyDTO);
+    public ResponseEntity<Long> createCompany(@RequestBody @Valid final CompanyDTO companyDTO) {
+        final Long createdId = companyService.create(companyDTO);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UUID> updateCompany(@PathVariable(name = "id") final UUID id,
+    public ResponseEntity<Long> updateCompany(@PathVariable(name = "id") final Long id,
             @RequestBody @Valid final CompanyDTO companyDTO) {
         companyService.update(id, companyDTO);
         return ResponseEntity.ok(id);
@@ -86,7 +85,7 @@ public class CompanyResource {
 
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
-    public ResponseEntity<Void> deleteCompany(@PathVariable(name = "id") final UUID id) {
+    public ResponseEntity<Void> deleteCompany(@PathVariable(name = "id") final Long id) {
         final ReferencedWarning referencedWarning = companyService.getReferencedWarning(id);
         if (referencedWarning != null) {
             throw new ReferencedException(referencedWarning);

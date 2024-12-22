@@ -1,7 +1,6 @@
 package uit.carbon_shop.service;
 
 import jakarta.transaction.Transactional;
-import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -55,13 +54,13 @@ public class AppUserService {
     public Page<AppUserDTO> findAll(final String filter, final Pageable pageable) {
         Page<AppUser> page;
         if (filter != null) {
-            UUID uuidFilter = null;
+            Long longFilter = null;
             try {
-                uuidFilter = UUID.fromString(filter);
-            } catch (final IllegalArgumentException illegalArgumentException) {
+                longFilter = Long.parseLong(filter);
+            } catch (final NumberFormatException numberFormatException) {
                 // keep null - no parseable input
             }
-            page = appUserRepository.findAllByUserId(uuidFilter, pageable);
+            page = appUserRepository.findAllByUserId(longFilter, pageable);
         } else {
             page = appUserRepository.findAll(pageable);
         }
@@ -72,34 +71,34 @@ public class AppUserService {
                 pageable, page.getTotalElements());
     }
 
-    public AppUserDTO get(final UUID userId) {
+    public AppUserDTO get(final Long userId) {
         return appUserRepository.findById(userId)
                 .map(appUser -> appUserMapper.updateAppUserDTO(appUser, new AppUserDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
-    public UUID create(final AppUserDTO appUserDTO) {
+    public Long create(final AppUserDTO appUserDTO) {
         final AppUser appUser = new AppUser();
         appUserMapper.updateAppUser(appUserDTO, appUser, companyRepository, projectRepository, passwordEncoder);
         return appUserRepository.save(appUser).getUserId();
     }
 
-    public void update(final UUID userId, final AppUserDTO appUserDTO) {
+    public void update(final Long userId, final AppUserDTO appUserDTO) {
         final AppUser appUser = appUserRepository.findById(userId)
                 .orElseThrow(NotFoundException::new);
         appUserMapper.updateAppUser(appUserDTO, appUser, companyRepository, projectRepository, passwordEncoder);
         appUserRepository.save(appUser);
     }
 
-    public void delete(final UUID userId) {
+    public void delete(final Long userId) {
         appUserRepository.deleteById(userId);
     }
 
-    public boolean companyExists(final UUID id) {
+    public boolean companyExists(final Long id) {
         return appUserRepository.existsByCompanyId(id);
     }
 
-    public ReferencedWarning getReferencedWarning(final UUID userId) {
+    public ReferencedWarning getReferencedWarning(final Long userId) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final AppUser appUser = appUserRepository.findById(userId)
                 .orElseThrow(NotFoundException::new);

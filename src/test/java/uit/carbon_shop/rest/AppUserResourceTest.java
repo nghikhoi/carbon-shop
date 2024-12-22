@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.UUID;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,7 @@ public class AppUserResourceTest extends BaseIT {
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("page.totalElements", Matchers.equalTo(2))
-                    .body("content.get(0).userId", Matchers.equalTo("a93e29a3-5278-371c-bf65-495871231324"));
+                    .body("content.get(0).userId", Matchers.equalTo(1300));
     }
 
     @Test
@@ -32,11 +31,11 @@ public class AppUserResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/appUsers?filter=b8f45244-f093-39e1-aea3-f9117ca45157")
+                    .get("/api/appUsers?filter=1301")
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("page.totalElements", Matchers.equalTo(1))
-                    .body("content.get(0).userId", Matchers.equalTo("b8f45244-f093-39e1-aea3-f9117ca45157"));
+                    .body("content.get(0).userId", Matchers.equalTo(1301));
     }
 
     @Test
@@ -45,7 +44,7 @@ public class AppUserResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/appUsers/a93e29a3-5278-371c-bf65-495871231324")
+                    .get("/api/appUsers/1300")
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("name", Matchers.equalTo("Sed diam voluptua."));
@@ -57,7 +56,7 @@ public class AppUserResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/appUsers/2383af9d-6f6c-36ac-ae72-992f2977f67e")
+                    .get("/api/appUsers/1966")
                 .then()
                     .statusCode(HttpStatus.NOT_FOUND.value())
                     .body("code", Matchers.equalTo("NOT_FOUND"));
@@ -101,10 +100,10 @@ public class AppUserResourceTest extends BaseIT {
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/appUserDTORequest.json"))
                 .when()
-                    .put("/api/appUsers/a93e29a3-5278-371c-bf65-495871231324")
+                    .put("/api/appUsers/1300")
                 .then()
                     .statusCode(HttpStatus.OK.value());
-        assertEquals("Duis autem vel.", appUserRepository.findById(UUID.fromString("a93e29a3-5278-371c-bf65-495871231324")).orElseThrow().getName());
+        assertEquals("Duis autem vel.", appUserRepository.findById(((long)1300)).orElseThrow().getName());
         assertEquals(2, appUserRepository.count());
     }
 
@@ -114,7 +113,7 @@ public class AppUserResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .delete("/api/appUsers/a93e29a3-5278-371c-bf65-495871231324")
+                    .delete("/api/appUsers/1300")
                 .then()
                     .statusCode(HttpStatus.NO_CONTENT.value());
         assertEquals(1, appUserRepository.count());

@@ -1,7 +1,6 @@
 package uit.carbon_shop.model;
 
 import jakarta.validation.constraints.Size;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class CompanyDTO {
 
-    private UUID id;
+    private Long id;
 
     @Size(max = 255)
     private String name;

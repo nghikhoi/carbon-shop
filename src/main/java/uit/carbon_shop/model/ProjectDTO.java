@@ -3,7 +3,6 @@ package uit.carbon_shop.model;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class ProjectDTO {
 
-    private UUID projectId;
+    private Long projectId;
 
     private String name;
 
@@ -49,8 +48,8 @@ public class ProjectDTO {
 
     private ProjectStatus status;
 
-    private UUID ownerCompany;
+    private Long ownerCompany;
 
-    private UUID auditBy;
+    private Long auditBy;
 
 }

@@ -1,7 +1,8 @@
 package uit.carbon_shop.service;
 
-import java.util.List;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uit.carbon_shop.domain.Order;
 import uit.carbon_shop.model.OrderDTO;
@@ -28,11 +29,24 @@ public class OrderService {
         this.orderMapper = orderMapper;
     }
 
-    public List<OrderDTO> findAll() {
-        final List<Order> orders = orderRepository.findAll(Sort.by("orderId"));
-        return orders.stream()
+    public Page<OrderDTO> findAll(final String filter, final Pageable pageable) {
+        Page<Order> page;
+        if (filter != null) {
+            Long longFilter = null;
+            try {
+                longFilter = Long.parseLong(filter);
+            } catch (final NumberFormatException numberFormatException) {
+                // keep null - no parseable input
+            }
+            page = orderRepository.findAllByOrderId(longFilter, pageable);
+        } else {
+            page = orderRepository.findAll(pageable);
+        }
+        return new PageImpl<>(page.getContent()
+                .stream()
                 .map(order -> orderMapper.updateOrderDTO(order, new OrderDTO()))
-                .toList();
+                .toList(),
+                pageable, page.getTotalElements());
     }
 
     public OrderDTO get(final Long orderId) {

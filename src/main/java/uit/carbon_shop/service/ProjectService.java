@@ -1,7 +1,6 @@
 package uit.carbon_shop.service;
 
 import jakarta.transaction.Transactional;
-import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -45,13 +44,13 @@ public class ProjectService {
     public Page<ProjectDTO> findAll(final String filter, final Pageable pageable) {
         Page<Project> page;
         if (filter != null) {
-            UUID uuidFilter = null;
+            Long longFilter = null;
             try {
-                uuidFilter = UUID.fromString(filter);
-            } catch (final IllegalArgumentException illegalArgumentException) {
+                longFilter = Long.parseLong(filter);
+            } catch (final NumberFormatException numberFormatException) {
                 // keep null - no parseable input
             }
-            page = projectRepository.findAllByProjectId(uuidFilter, pageable);
+            page = projectRepository.findAllByProjectId(longFilter, pageable);
         } else {
             page = projectRepository.findAll(pageable);
         }
@@ -62,26 +61,26 @@ public class ProjectService {
                 pageable, page.getTotalElements());
     }
 
-    public ProjectDTO get(final UUID projectId) {
+    public ProjectDTO get(final Long projectId) {
         return projectRepository.findById(projectId)
                 .map(project -> projectMapper.updateProjectDTO(project, new ProjectDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
-    public UUID create(final ProjectDTO projectDTO) {
+    public Long create(final ProjectDTO projectDTO) {
         final Project project = new Project();
         projectMapper.updateProject(projectDTO, project, companyRepository, appUserRepository);
         return projectRepository.save(project).getProjectId();
     }
 
-    public void update(final UUID projectId, final ProjectDTO projectDTO) {
+    public void update(final Long projectId, final ProjectDTO projectDTO) {
         final Project project = projectRepository.findById(projectId)
                 .orElseThrow(NotFoundException::new);
         projectMapper.updateProject(projectDTO, project, companyRepository, appUserRepository);
         projectRepository.save(project);
     }
 
-    public void delete(final UUID projectId) {
+    public void delete(final Long projectId) {
         final Project project = projectRepository.findById(projectId)
                 .orElseThrow(NotFoundException::new);
         // remove many-to-many relations at owning side
@@ -90,7 +89,7 @@ public class ProjectService {
         projectRepository.delete(project);
     }
 
-    public ReferencedWarning getReferencedWarning(final UUID projectId) {
+    public ReferencedWarning getReferencedWarning(final Long projectId) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Project project = projectRepository.findById(projectId)
                 .orElseThrow(NotFoundException::new);

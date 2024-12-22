@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.UUID;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -25,7 +24,7 @@ public class CompanyResourceTest extends BaseIT {
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("page.totalElements", Matchers.equalTo(2))
-                    .body("content.get(0).id", Matchers.equalTo("a92d0103-08a6-3379-9a3d-9c728ee74244"));
+                    .body("content.get(0).id", Matchers.equalTo(1200));
     }
 
     @Test
@@ -35,11 +34,11 @@ public class CompanyResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/companies?filter=b801e5d4-da87-3c39-9782-741cd794002d")
+                    .get("/api/companies?filter=1201")
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("page.totalElements", Matchers.equalTo(1))
-                    .body("content.get(0).id", Matchers.equalTo("b801e5d4-da87-3c39-9782-741cd794002d"));
+                    .body("content.get(0).id", Matchers.equalTo(1201));
     }
 
     @Test
@@ -49,7 +48,7 @@ public class CompanyResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/companies/a92d0103-08a6-3379-9a3d-9c728ee74244")
+                    .get("/api/companies/1200")
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .body("name", Matchers.equalTo("Sed diam voluptua."));
@@ -61,7 +60,7 @@ public class CompanyResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/companies/23de10ad-baa1-32ee-93f7-7f679fa1483a")
+                    .get("/api/companies/1866")
                 .then()
                     .statusCode(HttpStatus.NOT_FOUND.value())
                     .body("code", Matchers.equalTo("NOT_FOUND"));
@@ -90,10 +89,10 @@ public class CompanyResourceTest extends BaseIT {
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/companyDTORequest.json"))
                 .when()
-                    .put("/api/companies/a92d0103-08a6-3379-9a3d-9c728ee74244")
+                    .put("/api/companies/1200")
                 .then()
                     .statusCode(HttpStatus.OK.value());
-        assertEquals("Duis autem vel.", companyRepository.findById(UUID.fromString("a92d0103-08a6-3379-9a3d-9c728ee74244")).orElseThrow().getName());
+        assertEquals("Duis autem vel.", companyRepository.findById(((long)1200)).orElseThrow().getName());
         assertEquals(2, companyRepository.count());
     }
 
@@ -104,7 +103,7 @@ public class CompanyResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .delete("/api/companies/a92d0103-08a6-3379-9a3d-9c728ee74244")
+                    .delete("/api/companies/1200")
                 .then()
                     .statusCode(HttpStatus.NO_CONTENT.value());
         assertEquals(1, companyRepository.count());
