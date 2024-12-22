@@ -25,4 +25,11 @@ public class RegistrationResource {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/register/mediator")
+    public ResponseEntity<Void> registerMediator(
+            @RequestBody @Valid final RegistrationRequest registrationRequest) {
+        registrationService.registerMediator(registrationRequest);
+        return ResponseEntity.ok().build();
+    }
+
 }

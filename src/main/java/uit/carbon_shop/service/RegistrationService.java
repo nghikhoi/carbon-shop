@@ -37,6 +37,20 @@ public class RegistrationService {
         appUserRepository.save(appUser);
     }
 
+    public void registerMediator(final RegistrationRequest registrationRequest) {
+        log.info("registering new mediator: {}", registrationRequest.getEmail());
+
+        final AppUser appUser = new AppUser();
+        appUser.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
+        appUser.setName(registrationRequest.getName());
+        appUser.setPhone(registrationRequest.getPhone());
+        appUser.setEmail(registrationRequest.getEmail());
+        appUser.setStatus(UserStatus.APPROVED);
+        // assign default role
+        appUser.setRole(UserRole.MEDIATOR);
+        appUserRepository.save(appUser);
+    }
+
     public boolean emailExists(final String email) {
         return appUserRepository.existsByEmailIgnoreCase(email);
     }
