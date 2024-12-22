@@ -32,6 +32,9 @@ spring:
   docker:
     compose:
       lifecycle-management: start-only
+  content:
+    fs:
+      filesystem-root: /tmp
 error:
   handling:
     http-status-in-json-response: true

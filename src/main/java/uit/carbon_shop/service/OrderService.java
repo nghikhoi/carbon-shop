@@ -49,6 +49,24 @@ public class OrderService {
                 pageable, page.getTotalElements());
     }
 
+    public Page<OrderDTO> findAllCreatedBy(final Long userId, final Pageable pageable) {
+        final Page<Order> page = orderRepository.findByCreatedBy_UserId(userId, pageable);
+        return new PageImpl<>(page.getContent()
+                .stream()
+                .map(order -> orderMapper.updateOrderDTO(order, new OrderDTO()))
+                .toList(),
+                pageable, page.getTotalElements());
+    }
+
+    public Page<OrderDTO> findByOwnerCompany(final Long companyId, final Pageable pageable) {
+        final Page<Order> page = orderRepository.findByProject_OwnerCompany_Id(companyId, pageable);
+        return new PageImpl<>(page.getContent()
+                .stream()
+                .map(order -> orderMapper.updateOrderDTO(order, new OrderDTO()))
+                .toList(),
+                pageable, page.getTotalElements());
+    }
+
     public OrderDTO get(final Long orderId) {
         return orderRepository.findById(orderId)
                 .map(order -> orderMapper.updateOrderDTO(order, new OrderDTO()))
@@ -57,14 +75,14 @@ public class OrderService {
 
     public Long create(final OrderDTO orderDTO) {
         final Order order = new Order();
-        orderMapper.updateOrder(orderDTO, order, projectRepository, appUserRepository, appUserRepository);
+        orderMapper.updateOrder(orderDTO, order, projectRepository, appUserRepository);
         return orderRepository.save(order).getOrderId();
     }
 
     public void update(final Long orderId, final OrderDTO orderDTO) {
         final Order order = orderRepository.findById(orderId)
                 .orElseThrow(NotFoundException::new);
-        orderMapper.updateOrder(orderDTO, order, projectRepository, appUserRepository, appUserRepository);
+        orderMapper.updateOrder(orderDTO, order, projectRepository, appUserRepository);
         orderRepository.save(order);
     }
 

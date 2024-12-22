@@ -2,12 +2,14 @@ package uit.carbon_shop.model;
 
 import jakarta.validation.constraints.Size;
 import java.util.List;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 
 @Getter
 @Setter
+@Data
 public class ProjectReviewDTO {
 
     private Long id;

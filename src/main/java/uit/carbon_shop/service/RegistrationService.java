@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import uit.carbon_shop.domain.AppUser;
 import uit.carbon_shop.model.RegistrationRequest;
 import uit.carbon_shop.model.UserRole;
+import uit.carbon_shop.model.UserStatus;
 import uit.carbon_shop.repos.AppUserRepository;
 
 
@@ -30,9 +31,7 @@ public class RegistrationService {
         appUser.setName(registrationRequest.getName());
         appUser.setPhone(registrationRequest.getPhone());
         appUser.setEmail(registrationRequest.getEmail());
-        appUser.setApprovedAt(registrationRequest.getApprovedAt());
-        appUser.setRejectedAt(registrationRequest.getRejectedAt());
-        appUser.setStatus(registrationRequest.getStatus());
+        appUser.setStatus(UserStatus.INIT);
         // assign default role
         appUser.setRole(UserRole.SELLER_OR_BUYER);
         appUserRepository.save(appUser);

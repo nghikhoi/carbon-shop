@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class BuyerCreateOrder {
 
-    @Size(max = 255)
-    private String content;
+    private Long projectId;
+    private Long creditAmount;
 
 }

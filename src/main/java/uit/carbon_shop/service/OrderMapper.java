@@ -40,13 +40,11 @@ public interface OrderMapper {
     @Mapping(target = "createdBy", ignore = true)
     Order updateOrder(OrderDTO orderDTO, @MappingTarget Order order,
             @Context ProjectRepository projectRepository,
-            @Context AppUserRepository appUserRepository,
             @Context AppUserRepository appUserRepository);
 
     @AfterMapping
     default void afterUpdateOrder(OrderDTO orderDTO, @MappingTarget Order order,
             @Context ProjectRepository projectRepository,
-            @Context AppUserRepository appUserRepository,
             @Context AppUserRepository appUserRepository) {
         final Project project = orderDTO.getProject() == null ? null : projectRepository.findById(orderDTO.getProject())
                 .orElseThrow(() -> new NotFoundException("project not found"));

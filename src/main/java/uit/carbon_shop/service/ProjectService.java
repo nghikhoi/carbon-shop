@@ -61,6 +61,15 @@ public class ProjectService {
                 pageable, page.getTotalElements());
     }
 
+    public Page<ProjectDTO> findAllByOwner(final Long ownerCompany, final Pageable pageable) {
+        final Page<Project> page = projectRepository.findByOwnerCompany_Id(ownerCompany, pageable);
+        return new PageImpl<>(page.getContent()
+                .stream()
+                .map(project -> projectMapper.updateProjectDTO(project, new ProjectDTO()))
+                .toList(),
+                pageable, page.getTotalElements());
+    }
+
     public ProjectDTO get(final Long projectId) {
         return projectRepository.findById(projectId)
                 .map(project -> projectMapper.updateProjectDTO(project, new ProjectDTO()))
