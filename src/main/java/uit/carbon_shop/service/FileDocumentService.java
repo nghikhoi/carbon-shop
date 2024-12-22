@@ -36,6 +36,7 @@ public class FileDocumentService {
 
     public Long create(final FileDocumentDTO fileDocumentDTO) {
         final FileDocument fileDocument = new FileDocument();
+        fileDocument.setId(fileDocumentDTO.getId());
         fileDocumentMapper.updateFileDocument(fileDocumentDTO, fileDocument);
         return fileDocumentRepository.save(fileDocument).getId();
     }

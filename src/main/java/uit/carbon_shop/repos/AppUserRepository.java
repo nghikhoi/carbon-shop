@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import uit.carbon_shop.domain.AppUser;
 import uit.carbon_shop.domain.Company;
 import uit.carbon_shop.domain.Project;
+import uit.carbon_shop.model.UserStatus;
 
 
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
@@ -26,5 +27,7 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     List<AppUser> findAllByFavoriteProjects(Project project);
 
     boolean existsByCompanyId(Long id);
+
+    Page<AppUser> findByStatus(UserStatus status, Pageable pageable);
 
 }

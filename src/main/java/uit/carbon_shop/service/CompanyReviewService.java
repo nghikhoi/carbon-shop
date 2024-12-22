@@ -57,6 +57,7 @@ public class CompanyReviewService {
 
     public Long create(final CompanyReviewDTO companyReviewDTO) {
         final CompanyReview companyReview = new CompanyReview();
+        companyReview.setId(companyReviewDTO.getId());
         companyReviewMapper.updateCompanyReview(companyReviewDTO, companyReview, companyRepository, appUserRepository);
         return companyReviewRepository.save(companyReview).getId();
     }

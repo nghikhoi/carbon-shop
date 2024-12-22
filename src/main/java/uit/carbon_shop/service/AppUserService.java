@@ -13,6 +13,7 @@ import uit.carbon_shop.domain.Project;
 import uit.carbon_shop.domain.ProjectReview;
 import uit.carbon_shop.domain.Question;
 import uit.carbon_shop.model.AppUserDTO;
+import uit.carbon_shop.model.UserStatus;
 import uit.carbon_shop.repos.AppUserRepository;
 import uit.carbon_shop.repos.CompanyRepository;
 import uit.carbon_shop.repos.CompanyReviewRepository;
@@ -76,6 +77,15 @@ public class AppUserService {
                 pageable, page.getTotalElements());
     }
 
+    public Page<AppUserDTO> findByStatus(UserStatus status, final Pageable pageable) {
+        final Page<AppUser> page = appUserRepository.findByStatus(status, pageable);
+        return new PageImpl<>(page.getContent()
+                .stream()
+                .map(appUser -> appUserMapper.updateAppUserDTO(appUser, new AppUserDTO()))
+                .toList(),
+                pageable, page.getTotalElements());
+    }
+
     public AppUserDTO get(final Long userId) {
         return appUserRepository.findById(userId)
                 .map(appUser -> appUserMapper.updateAppUserDTO(appUser, new AppUserDTO()))
@@ -84,6 +94,7 @@ public class AppUserService {
 
     public Long create(final AppUserDTO appUserDTO) {
         final AppUser appUser = new AppUser();
+        appUser.setUserId(appUserDTO.getUserId());
         appUserMapper.updateAppUser(appUserDTO, appUser, companyRepository, projectRepository, passwordEncoder);
         return appUserRepository.save(appUser).getUserId();
     }

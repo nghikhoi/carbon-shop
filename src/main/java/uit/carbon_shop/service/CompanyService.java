@@ -65,15 +65,16 @@ public class CompanyService {
 
     public Long create(final CompanyDTO companyDTO) {
         final Company company = new Company();
+        company.setId(companyDTO.getId());
         companyMapper.updateCompany(companyDTO, company);
-        return companyRepository.save(company).getId();
+        return companyRepository.saveAndFlush(company).getId();
     }
 
     public void update(final Long id, final CompanyDTO companyDTO) {
         final Company company = companyRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
         companyMapper.updateCompany(companyDTO, company);
-        companyRepository.save(company);
+        companyRepository.saveAndFlush(company);
     }
 
     public void delete(final Long id) {

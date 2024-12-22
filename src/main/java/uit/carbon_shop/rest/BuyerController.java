@@ -26,6 +26,8 @@ import uit.carbon_shop.model.CompanyDTO;
 import uit.carbon_shop.model.CompanyReviewDTO;
 import uit.carbon_shop.model.OrderDTO;
 import uit.carbon_shop.model.OrderStatus;
+import uit.carbon_shop.model.PagedOrderDTO;
+import uit.carbon_shop.model.PagedProjectDTO;
 import uit.carbon_shop.model.ProjectDTO;
 import uit.carbon_shop.model.ProjectReviewDTO;
 import uit.carbon_shop.model.UserRole;
@@ -74,10 +76,10 @@ public class BuyerController {
     }
 
     @GetMapping("/projects")
-    public ResponseEntity<Page<ProjectDTO>> viewAllProject(
+    public ResponseEntity<PagedProjectDTO> viewAllProject(
             @RequestParam(name = "filter", required = false) final String filter,
             @Parameter(hidden = true) @SortDefault(sort = "projectId") @PageableDefault(size = 20) final Pageable pageable) {
-        return ResponseEntity.ok(projectService.findAll(filter, pageable));
+        return ResponseEntity.ok(new PagedProjectDTO(projectService.findAll(filter, pageable)));
     }
 
     @GetMapping("/order/{orderId}")
@@ -103,11 +105,11 @@ public class BuyerController {
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<Page<OrderDTO>> viewAllOrders(
+    public ResponseEntity<PagedOrderDTO> viewAllOrders(
             @RequestParam(name = "filter", required = false) final String filter,
             @Parameter(hidden = true) @SortDefault(sort = "projectId") @PageableDefault(size = 20) final Pageable pageable,
             Authentication authentication) {
-        return ResponseEntity.ok(orderService.findAllCreatedBy(Long.parseLong(authentication.getName()), pageable));
+        return ResponseEntity.ok(new PagedOrderDTO(orderService.findAllCreatedBy(Long.parseLong(authentication.getName()), pageable)));
     }
 
     @GetMapping("/company/{companyId}")

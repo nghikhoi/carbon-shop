@@ -23,6 +23,8 @@ import uit.carbon_shop.model.AppUserDTO;
 import uit.carbon_shop.model.CompanyDTO;
 import uit.carbon_shop.model.CompanyReviewDTO;
 import uit.carbon_shop.model.OrderDTO;
+import uit.carbon_shop.model.PagedOrderDTO;
+import uit.carbon_shop.model.PagedProjectDTO;
 import uit.carbon_shop.model.ProjectDTO;
 import uit.carbon_shop.model.ProjectStatus;
 import uit.carbon_shop.model.SellerRegisterProjectDTO;
@@ -83,13 +85,13 @@ public class SellerController {
     }
 
     @GetMapping("/projects")
-    public ResponseEntity<Page<ProjectDTO>> viewAllProject(
+    public ResponseEntity<PagedProjectDTO> viewAllProject(
             @RequestParam(name = "filter", required = false) final String filter,
             @Parameter(hidden = true) @SortDefault(sort = "projectId") @PageableDefault(size = 20) final Pageable pageable,
             Authentication authentication) {
         long userId = Long.parseLong(authentication.getName());
         AppUserDTO appUser = appUserService.get(userId);
-        return ResponseEntity.ok(projectService.findAllByOwner(appUser.getCompany(), pageable));
+        return ResponseEntity.ok(new PagedProjectDTO(projectService.findAllByOwner(appUser.getCompany(), pageable)));
     }
 
     @GetMapping("/order/{orderId}")
@@ -99,13 +101,13 @@ public class SellerController {
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<Page<OrderDTO>> viewAllOrders(
+    public ResponseEntity<PagedOrderDTO> viewAllOrders(
             @RequestParam(name = "filter", required = false) final String filter,
             @Parameter(hidden = true) @SortDefault(sort = "orderId") @PageableDefault(size = 20) final Pageable pageable,
             Authentication authentication) {
         long userId = Long.parseLong(authentication.getName());
         AppUserDTO appUser = appUserService.get(userId);
-        return ResponseEntity.ok(orderService.findByOwnerCompany(appUser.getCompany(), pageable));
+        return ResponseEntity.ok(new PagedOrderDTO(orderService.findByOwnerCompany(appUser.getCompany(), pageable)));
     }
 
     @GetMapping("/company/{companyId}")

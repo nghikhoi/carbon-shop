@@ -10,6 +10,6 @@ import lombok.Setter;
 public class UserAskDTO {
 
     @Size(max = 255)
-    private String content;
+    private String question;
 
 }

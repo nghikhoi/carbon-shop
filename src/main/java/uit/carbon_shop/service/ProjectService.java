@@ -9,6 +9,7 @@ import uit.carbon_shop.domain.Order;
 import uit.carbon_shop.domain.Project;
 import uit.carbon_shop.domain.ProjectReview;
 import uit.carbon_shop.model.ProjectDTO;
+import uit.carbon_shop.model.ProjectStatus;
 import uit.carbon_shop.repos.AppUserRepository;
 import uit.carbon_shop.repos.CompanyRepository;
 import uit.carbon_shop.repos.OrderRepository;
@@ -70,6 +71,15 @@ public class ProjectService {
                 pageable, page.getTotalElements());
     }
 
+    public Page<ProjectDTO> findByStatus(ProjectStatus status, Pageable pageable) {
+        final Page<Project> page = projectRepository.findByStatus(status, pageable);
+        return new PageImpl<>(page.getContent()
+                .stream()
+                .map(project -> projectMapper.updateProjectDTO(project, new ProjectDTO()))
+                .toList(),
+                pageable, page.getTotalElements());
+    }
+
     public ProjectDTO get(final Long projectId) {
         return projectRepository.findById(projectId)
                 .map(project -> projectMapper.updateProjectDTO(project, new ProjectDTO()))
@@ -78,6 +88,7 @@ public class ProjectService {
 
     public Long create(final ProjectDTO projectDTO) {
         final Project project = new Project();
+        project.setProjectId(projectDTO.getProjectId());
         projectMapper.updateProject(projectDTO, project, companyRepository, appUserRepository);
         return projectRepository.save(project).getProjectId();
     }

@@ -57,6 +57,7 @@ public class ProjectReviewService {
 
     public Long create(final ProjectReviewDTO projectReviewDTO) {
         final ProjectReview projectReview = new ProjectReview();
+        projectReview.setId(projectReviewDTO.getId());
         projectReviewMapper.updateProjectReview(projectReviewDTO, projectReview, projectRepository, appUserRepository);
         return projectReviewRepository.save(projectReview).getId();
     }
