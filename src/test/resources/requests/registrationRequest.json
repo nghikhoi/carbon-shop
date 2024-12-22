@@ -3,5 +3,7 @@
   "name" : "Duis autem vel.",
   "phone" : "Quis nostrud exerci.",
   "email" : "email15@invalid.bootify.io",
-  "approvedAt" : "2024-05-21T14:30:00"
+  "approvedAt" : "2024-05-21T14:30:00",
+  "rejectedAt" : "2024-05-21T14:30:00",
+  "status" : "INIT"
 }

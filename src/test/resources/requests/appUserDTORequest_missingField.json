@@ -5,5 +5,7 @@
   "phone" : "Quis nostrud exerci.",
   "email" : "email15@invalid.bootify.io",
   "role" : "SELLER_OR_BUYER",
-  "approvedAt" : "2024-05-21T14:30:00"
+  "approvedAt" : "2024-05-21T14:30:00",
+  "rejectedAt" : "2024-05-21T14:30:00",
+  "status" : "INIT"
 }

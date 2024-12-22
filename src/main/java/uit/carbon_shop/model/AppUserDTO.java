@@ -41,6 +41,10 @@ public class AppUserDTO {
 
     private LocalDateTime approvedAt;
 
+    private LocalDateTime rejectedAt;
+
+    private UserStatus status;
+
     @AppUserCompanyUnique
     private Long company;
 

@@ -31,4 +31,8 @@ public class RegistrationRequest {
 
     private LocalDateTime approvedAt;
 
+    private LocalDateTime rejectedAt;
+
+    private UserStatus status;
+
 }

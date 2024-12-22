@@ -31,6 +31,8 @@ public class RegistrationService {
         appUser.setPhone(registrationRequest.getPhone());
         appUser.setEmail(registrationRequest.getEmail());
         appUser.setApprovedAt(registrationRequest.getApprovedAt());
+        appUser.setRejectedAt(registrationRequest.getRejectedAt());
+        appUser.setStatus(registrationRequest.getStatus());
         // assign default role
         appUser.setRole(UserRole.SELLER_OR_BUYER);
         appUserRepository.save(appUser);

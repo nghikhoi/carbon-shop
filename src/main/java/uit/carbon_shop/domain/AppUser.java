@@ -25,6 +25,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import uit.carbon_shop.model.UserRole;
+import uit.carbon_shop.model.UserStatus;
 
 
 @Entity
@@ -72,6 +73,13 @@ public class AppUser {
 
     @Column
     private LocalDateTime approvedAt;
+
+    @Column
+    private LocalDateTime rejectedAt;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", unique = true)
