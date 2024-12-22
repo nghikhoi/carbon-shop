@@ -11,6 +11,7 @@ import uit.carbon_shop.domain.CompanyReview;
 import uit.carbon_shop.domain.Order;
 import uit.carbon_shop.domain.Project;
 import uit.carbon_shop.domain.ProjectReview;
+import uit.carbon_shop.domain.Question;
 import uit.carbon_shop.model.AppUserDTO;
 import uit.carbon_shop.repos.AppUserRepository;
 import uit.carbon_shop.repos.CompanyRepository;
@@ -18,6 +19,7 @@ import uit.carbon_shop.repos.CompanyReviewRepository;
 import uit.carbon_shop.repos.OrderRepository;
 import uit.carbon_shop.repos.ProjectRepository;
 import uit.carbon_shop.repos.ProjectReviewRepository;
+import uit.carbon_shop.repos.QuestionRepository;
 import uit.carbon_shop.util.NotFoundException;
 import uit.carbon_shop.util.ReferencedWarning;
 
@@ -34,13 +36,15 @@ public class AppUserService {
     private final OrderRepository orderRepository;
     private final CompanyReviewRepository companyReviewRepository;
     private final ProjectReviewRepository projectReviewRepository;
+    private final QuestionRepository questionRepository;
 
     public AppUserService(final AppUserRepository appUserRepository,
             final CompanyRepository companyRepository, final ProjectRepository projectRepository,
             final PasswordEncoder passwordEncoder, final AppUserMapper appUserMapper,
             final OrderRepository orderRepository,
             final CompanyReviewRepository companyReviewRepository,
-            final ProjectReviewRepository projectReviewRepository) {
+            final ProjectReviewRepository projectReviewRepository,
+            final QuestionRepository questionRepository) {
         this.appUserRepository = appUserRepository;
         this.companyRepository = companyRepository;
         this.projectRepository = projectRepository;
@@ -49,6 +53,7 @@ public class AppUserService {
         this.orderRepository = orderRepository;
         this.companyReviewRepository = companyReviewRepository;
         this.projectReviewRepository = projectReviewRepository;
+        this.questionRepository = questionRepository;
     }
 
     public Page<AppUserDTO> findAll(final String filter, final Pageable pageable) {
@@ -130,6 +135,12 @@ public class AppUserService {
         if (reviewByProjectReview != null) {
             referencedWarning.setKey("appUser.projectReview.reviewBy.referenced");
             referencedWarning.addParam(reviewByProjectReview.getId());
+            return referencedWarning;
+        }
+        final Question askedByQuestion = questionRepository.findFirstByAskedBy(appUser);
+        if (askedByQuestion != null) {
+            referencedWarning.setKey("appUser.question.askedBy.referenced");
+            referencedWarning.addParam(askedByQuestion.getId());
             return referencedWarning;
         }
         return null;

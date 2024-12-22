@@ -13,3 +13,5 @@ DELETE FROM file_documents;
 DELETE FROM company_reviews;
 
 DELETE FROM project_reviews;
+
+DELETE FROM questions;

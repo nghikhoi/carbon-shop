@@ -28,6 +28,7 @@ import uit.carbon_shop.repos.FileDocumentRepository;
 import uit.carbon_shop.repos.OrderRepository;
 import uit.carbon_shop.repos.ProjectRepository;
 import uit.carbon_shop.repos.ProjectReviewRepository;
+import uit.carbon_shop.repos.QuestionRepository;
 
 
 /**
@@ -86,6 +87,9 @@ public abstract class BaseIT {
 
     @Autowired
     public ProjectReviewRepository projectReviewRepository;
+
+    @Autowired
+    public QuestionRepository questionRepository;
 
     @PostConstruct
     public void initRestAssured() {

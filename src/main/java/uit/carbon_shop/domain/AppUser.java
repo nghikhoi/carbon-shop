@@ -105,6 +105,9 @@ public class AppUser {
     @OneToMany(mappedBy = "reviewBy")
     private Set<ProjectReview> projectReviews;
 
+    @OneToMany(mappedBy = "askedBy")
+    private Set<Question> askedQuestions;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private OffsetDateTime createdAt;
