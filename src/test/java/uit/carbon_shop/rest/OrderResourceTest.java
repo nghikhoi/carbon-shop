@@ -23,8 +23,22 @@ public class OrderResourceTest extends BaseIT {
                     .get("/api/orders")
                 .then()
                     .statusCode(HttpStatus.OK.value())
-                    .body("size()", Matchers.equalTo(2))
-                    .body("get(0).orderId", Matchers.equalTo(1200));
+                    .body("page.totalElements", Matchers.equalTo(2))
+                    .body("content.get(0).orderId", Matchers.equalTo(1100));
+    }
+
+    @Test
+    @Sql("/data/orderData.sql")
+    void getAllOrders_filtered() {
+        RestAssured
+                .given()
+                    .accept(ContentType.JSON)
+                .when()
+                    .get("/api/orders?filter=1101")
+                .then()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("page.totalElements", Matchers.equalTo(1))
+                    .body("content.get(0).orderId", Matchers.equalTo(1101));
     }
 
     @Test
@@ -34,10 +48,10 @@ public class OrderResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/orders/1200")
+                    .get("/api/orders/1100")
                 .then()
                     .statusCode(HttpStatus.OK.value())
-                    .body("numberCredits", Matchers.equalTo("Quis nostrud exerci."));
+                    .body("creditAmount", Matchers.equalTo(77));
     }
 
     @Test
@@ -46,7 +60,7 @@ public class OrderResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/orders/1866")
+                    .get("/api/orders/1766")
                 .then()
                     .statusCode(HttpStatus.NOT_FOUND.value())
                     .body("code", Matchers.equalTo("NOT_FOUND"));
@@ -75,10 +89,10 @@ public class OrderResourceTest extends BaseIT {
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/orderDTORequest.json"))
                 .when()
-                    .put("/api/orders/1200")
+                    .put("/api/orders/1100")
                 .then()
                     .statusCode(HttpStatus.OK.value());
-        assertEquals("At vero eos.", orderRepository.findById(((long)1200)).orElseThrow().getNumberCredits());
+        assertEquals(((long)92), orderRepository.findById(((long)1100)).orElseThrow().getCreditAmount());
         assertEquals(2, orderRepository.count());
     }
 
@@ -89,7 +103,7 @@ public class OrderResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .delete("/api/orders/1200")
+                    .delete("/api/orders/1100")
                 .then()
                     .statusCode(HttpStatus.NO_CONTENT.value());
         assertEquals(1, orderRepository.count());

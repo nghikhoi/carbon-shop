@@ -1,7 +1,7 @@
 package uit.carbon_shop.model;
 
 import jakarta.validation.constraints.Size;
-import java.util.UUID;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,8 +12,10 @@ public class OrderDTO {
 
     private Long orderId;
 
+    private Long creditAmount;
+
     @Size(max = 255)
-    private String numberCredits;
+    private String unit;
 
     @Size(max = 255)
     private String price;
@@ -21,19 +23,18 @@ public class OrderDTO {
     @Size(max = 255)
     private String total;
 
-    @OrderOrderStatusIdUnique
-    private Long orderStatusId;
+    private OrderStatus status;
 
-    private UUID sellerId;
+    private Long paymentBillFile;
 
-    private UUID buyerId;
+    private Long contractFile;
 
-    @OrderPaymentIdUnique
-    private UUID paymentId;
+    private List<Long> certImages;
 
-    @OrderConstractIdUnique
-    private Long constractId;
+    private Long project;
 
-    private Long staffId;
+    private Long processBy;
+
+    private Long createdBy;
 
 }

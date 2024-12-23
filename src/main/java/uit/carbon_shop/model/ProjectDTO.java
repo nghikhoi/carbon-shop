@@ -1,9 +1,8 @@
 package uit.carbon_shop.model;
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,34 +11,32 @@ import lombok.Setter;
 @Setter
 public class ProjectDTO {
 
-    private UUID projectId;
+    private Long projectId;
+
+    private String name;
+
+    private String address;
 
     @Size(max = 255)
-    private String projectName;
+    private String size;
+
+    private LocalDateTime timeStart;
+
+    private LocalDateTime timeEnd;
 
     @Size(max = 255)
-    private String projectAddress;
+    private String produceCarbonRate;
 
     @Size(max = 255)
-    private String projectSize;
+    private String partner;
 
     @Size(max = 255)
-    private String projectTimeStart;
+    private String auditByOrg;
+
+    private Long creditAmount;
 
     @Size(max = 255)
-    private String projectTimeEnd;
-
-    @Size(max = 255)
-    private String projectRangeCarbon;
-
-    @Size(max = 255)
-    private String organizationProvide;
-
-    @Size(max = 255)
-    private String numberCarBonCredit;
-
-    @Size(max = 255)
-    private String creditTimeStart;
+    private String cert;
 
     @Size(max = 255)
     private String price;
@@ -47,20 +44,12 @@ public class ProjectDTO {
     @Size(max = 255)
     private String methodPayment;
 
-    @Size(max = 255)
-    private String projectCredit;
+    private List<Long> projectImages;
 
-    @Size(max = 255)
-    private String creditDetail;
+    private ProjectStatus status;
 
-    @Size(max = 255)
-    private String creditId;
+    private Long ownerCompany;
 
-    private List<@Size(max = 255) String> image;
-
-    @NotNull
-    private UUID userId;
-
-    private Long reviewProjectId;
+    private Long auditBy;
 
 }

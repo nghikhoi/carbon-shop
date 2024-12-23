@@ -1,125 +1,128 @@
 package uit.carbon_shop.service;
 
-import java.util.List;
-import java.util.UUID;
-import org.springframework.data.domain.Sort;
+import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import uit.carbon_shop.domain.OrderStatus;
+import uit.carbon_shop.domain.Order;
 import uit.carbon_shop.domain.Project;
-import uit.carbon_shop.domain.ReviewProject;
-import uit.carbon_shop.domain.User;
+import uit.carbon_shop.domain.ProjectReview;
 import uit.carbon_shop.model.ProjectDTO;
-import uit.carbon_shop.repos.OrderStatusRepository;
+import uit.carbon_shop.model.ProjectStatus;
+import uit.carbon_shop.repos.AppUserRepository;
+import uit.carbon_shop.repos.CompanyRepository;
+import uit.carbon_shop.repos.OrderRepository;
 import uit.carbon_shop.repos.ProjectRepository;
-import uit.carbon_shop.repos.ReviewProjectRepository;
-import uit.carbon_shop.repos.UserRepository;
+import uit.carbon_shop.repos.ProjectReviewRepository;
 import uit.carbon_shop.util.NotFoundException;
 import uit.carbon_shop.util.ReferencedWarning;
 
 
 @Service
+@Transactional
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
-    private final ReviewProjectRepository reviewProjectRepository;
-    private final OrderStatusRepository orderStatusRepository;
+    private final CompanyRepository companyRepository;
+    private final AppUserRepository appUserRepository;
+    private final ProjectMapper projectMapper;
+    private final OrderRepository orderRepository;
+    private final ProjectReviewRepository projectReviewRepository;
 
     public ProjectService(final ProjectRepository projectRepository,
-            final UserRepository userRepository,
-            final ReviewProjectRepository reviewProjectRepository,
-            final OrderStatusRepository orderStatusRepository) {
+            final CompanyRepository companyRepository, final AppUserRepository appUserRepository,
+            final ProjectMapper projectMapper, final OrderRepository orderRepository,
+            final ProjectReviewRepository projectReviewRepository) {
         this.projectRepository = projectRepository;
-        this.userRepository = userRepository;
-        this.reviewProjectRepository = reviewProjectRepository;
-        this.orderStatusRepository = orderStatusRepository;
+        this.companyRepository = companyRepository;
+        this.appUserRepository = appUserRepository;
+        this.projectMapper = projectMapper;
+        this.orderRepository = orderRepository;
+        this.projectReviewRepository = projectReviewRepository;
     }
 
-    public List<ProjectDTO> findAll() {
-        final List<Project> projects = projectRepository.findAll(Sort.by("projectId"));
-        return projects.stream()
-                .map(project -> mapToDTO(project, new ProjectDTO()))
-                .toList();
+    public Page<ProjectDTO> findAll(final String filter, final Pageable pageable) {
+        Page<Project> page;
+        if (filter != null) {
+            Long longFilter = null;
+            try {
+                longFilter = Long.parseLong(filter);
+            } catch (final NumberFormatException numberFormatException) {
+                // keep null - no parseable input
+            }
+            page = projectRepository.findAllByProjectId(longFilter, pageable);
+        } else {
+            page = projectRepository.findAll(pageable);
+        }
+        return new PageImpl<>(page.getContent()
+                .stream()
+                .map(project -> projectMapper.updateProjectDTO(project, new ProjectDTO()))
+                .toList(),
+                pageable, page.getTotalElements());
     }
 
-    public ProjectDTO get(final UUID projectId) {
+    public Page<ProjectDTO> findAllByOwner(final Long ownerCompany, final Pageable pageable) {
+        final Page<Project> page = projectRepository.findByOwnerCompany_Id(ownerCompany, pageable);
+        return new PageImpl<>(page.getContent()
+                .stream()
+                .map(project -> projectMapper.updateProjectDTO(project, new ProjectDTO()))
+                .toList(),
+                pageable, page.getTotalElements());
+    }
+
+    public Page<ProjectDTO> findByStatus(ProjectStatus status, Pageable pageable) {
+        final Page<Project> page = projectRepository.findByStatus(status, pageable);
+        return new PageImpl<>(page.getContent()
+                .stream()
+                .map(project -> projectMapper.updateProjectDTO(project, new ProjectDTO()))
+                .toList(),
+                pageable, page.getTotalElements());
+    }
+
+    public ProjectDTO get(final Long projectId) {
         return projectRepository.findById(projectId)
-                .map(project -> mapToDTO(project, new ProjectDTO()))
+                .map(project -> projectMapper.updateProjectDTO(project, new ProjectDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
-    public UUID create(final ProjectDTO projectDTO) {
+    public Long create(final ProjectDTO projectDTO) {
         final Project project = new Project();
-        mapToEntity(projectDTO, project);
+        project.setProjectId(projectDTO.getProjectId());
+        projectMapper.updateProject(projectDTO, project, companyRepository, appUserRepository);
         return projectRepository.save(project).getProjectId();
     }
 
-    public void update(final UUID projectId, final ProjectDTO projectDTO) {
+    public void update(final Long projectId, final ProjectDTO projectDTO) {
         final Project project = projectRepository.findById(projectId)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(projectDTO, project);
+        projectMapper.updateProject(projectDTO, project, companyRepository, appUserRepository);
         projectRepository.save(project);
     }
 
-    public void delete(final UUID projectId) {
-        projectRepository.deleteById(projectId);
+    public void delete(final Long projectId) {
+        final Project project = projectRepository.findById(projectId)
+                .orElseThrow(NotFoundException::new);
+        // remove many-to-many relations at owning side
+        appUserRepository.findAllByFavoriteProjects(project)
+                .forEach(appUser -> appUser.getFavoriteProjects().remove(project));
+        projectRepository.delete(project);
     }
 
-    private ProjectDTO mapToDTO(final Project project, final ProjectDTO projectDTO) {
-        projectDTO.setProjectId(project.getProjectId());
-        projectDTO.setProjectName(project.getProjectName());
-        projectDTO.setProjectAddress(project.getProjectAddress());
-        projectDTO.setProjectSize(project.getProjectSize());
-        projectDTO.setProjectTimeStart(project.getProjectTimeStart());
-        projectDTO.setProjectTimeEnd(project.getProjectTimeEnd());
-        projectDTO.setProjectRangeCarbon(project.getProjectRangeCarbon());
-        projectDTO.setOrganizationProvide(project.getOrganizationProvide());
-        projectDTO.setNumberCarBonCredit(project.getNumberCarBonCredit());
-        projectDTO.setCreditTimeStart(project.getCreditTimeStart());
-        projectDTO.setPrice(project.getPrice());
-        projectDTO.setMethodPayment(project.getMethodPayment());
-        projectDTO.setProjectCredit(project.getProjectCredit());
-        projectDTO.setCreditDetail(project.getCreditDetail());
-        projectDTO.setCreditId(project.getCreditId());
-        projectDTO.setImage(project.getImage());
-        projectDTO.setUserId(project.getUserId() == null ? null : project.getUserId().getUserId());
-        projectDTO.setReviewProjectId(project.getReviewProjectId() == null ? null : project.getReviewProjectId().getReviewProjectId());
-        return projectDTO;
-    }
-
-    private Project mapToEntity(final ProjectDTO projectDTO, final Project project) {
-        project.setProjectName(projectDTO.getProjectName());
-        project.setProjectAddress(projectDTO.getProjectAddress());
-        project.setProjectSize(projectDTO.getProjectSize());
-        project.setProjectTimeStart(projectDTO.getProjectTimeStart());
-        project.setProjectTimeEnd(projectDTO.getProjectTimeEnd());
-        project.setProjectRangeCarbon(projectDTO.getProjectRangeCarbon());
-        project.setOrganizationProvide(projectDTO.getOrganizationProvide());
-        project.setNumberCarBonCredit(projectDTO.getNumberCarBonCredit());
-        project.setCreditTimeStart(projectDTO.getCreditTimeStart());
-        project.setPrice(projectDTO.getPrice());
-        project.setMethodPayment(projectDTO.getMethodPayment());
-        project.setProjectCredit(projectDTO.getProjectCredit());
-        project.setCreditDetail(projectDTO.getCreditDetail());
-        project.setCreditId(projectDTO.getCreditId());
-        project.setImage(projectDTO.getImage());
-        final User userId = projectDTO.getUserId() == null ? null : userRepository.findById(projectDTO.getUserId())
-                .orElseThrow(() -> new NotFoundException("userId not found"));
-        project.setUserId(userId);
-        final ReviewProject reviewProjectId = projectDTO.getReviewProjectId() == null ? null : reviewProjectRepository.findById(projectDTO.getReviewProjectId())
-                .orElseThrow(() -> new NotFoundException("reviewProjectId not found"));
-        project.setReviewProjectId(reviewProjectId);
-        return project;
-    }
-
-    public ReferencedWarning getReferencedWarning(final UUID projectId) {
+    public ReferencedWarning getReferencedWarning(final Long projectId) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Project project = projectRepository.findById(projectId)
                 .orElseThrow(NotFoundException::new);
-        final OrderStatus projectIdOrderStatus = orderStatusRepository.findFirstByProjectId(project);
-        if (projectIdOrderStatus != null) {
-            referencedWarning.setKey("project.orderStatus.projectId.referenced");
-            referencedWarning.addParam(projectIdOrderStatus.getOrderStatusId());
+        final Order projectOrder = orderRepository.findFirstByProject(project);
+        if (projectOrder != null) {
+            referencedWarning.setKey("project.order.project.referenced");
+            referencedWarning.addParam(projectOrder.getOrderId());
+            return referencedWarning;
+        }
+        final ProjectReview projectProjectReview = projectReviewRepository.findFirstByProject(project);
+        if (projectProjectReview != null) {
+            referencedWarning.setKey("project.projectReview.project.referenced");
+            referencedWarning.addParam(projectProjectReview.getId());
             return referencedWarning;
         }
         return null;

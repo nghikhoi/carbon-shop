@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.UUID;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -15,7 +14,7 @@ import uit.carbon_shop.config.BaseIT;
 public class ProjectResourceTest extends BaseIT {
 
     @Test
-    @Sql({"/data/userData.sql", "/data/projectData.sql"})
+    @Sql("/data/projectData.sql")
     void getAllProjects_success() {
         RestAssured
                 .given()
@@ -24,21 +23,35 @@ public class ProjectResourceTest extends BaseIT {
                     .get("/api/projects")
                 .then()
                     .statusCode(HttpStatus.OK.value())
-                    .body("size()", Matchers.equalTo(2))
-                    .body("get(0).projectId", Matchers.equalTo("a96e0a04-d20f-3096-bc64-dac2d639a577"));
+                    .body("page.totalElements", Matchers.equalTo(2))
+                    .body("content.get(0).projectId", Matchers.equalTo(1000));
     }
 
     @Test
-    @Sql({"/data/userData.sql", "/data/projectData.sql"})
+    @Sql("/data/projectData.sql")
+    void getAllProjects_filtered() {
+        RestAssured
+                .given()
+                    .accept(ContentType.JSON)
+                .when()
+                    .get("/api/projects?filter=1001")
+                .then()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("page.totalElements", Matchers.equalTo(1))
+                    .body("content.get(0).projectId", Matchers.equalTo(1001));
+    }
+
+    @Test
+    @Sql("/data/projectData.sql")
     void getProject_success() {
         RestAssured
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/projects/a96e0a04-d20f-3096-bc64-dac2d639a577")
+                    .get("/api/projects/1000")
                 .then()
                     .statusCode(HttpStatus.OK.value())
-                    .body("projectName", Matchers.equalTo("Et ea rebum."));
+                    .body("name", Matchers.equalTo("Ullamcorper eget nulla facilisi etiam dignissim diam."));
     }
 
     @Test
@@ -47,14 +60,13 @@ public class ProjectResourceTest extends BaseIT {
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .get("/api/projects/23a93ba8-9a5b-3c6c-a26e-49b88973f46e")
+                    .get("/api/projects/1666")
                 .then()
                     .statusCode(HttpStatus.NOT_FOUND.value())
                     .body("code", Matchers.equalTo("NOT_FOUND"));
     }
 
     @Test
-    @Sql("/data/userData.sql")
     void createProject_success() {
         RestAssured
                 .given()
@@ -69,7 +81,7 @@ public class ProjectResourceTest extends BaseIT {
     }
 
     @Test
-    @Sql({"/data/userData.sql", "/data/projectData.sql"})
+    @Sql("/data/projectData.sql")
     void updateProject_success() {
         RestAssured
                 .given()
@@ -77,21 +89,21 @@ public class ProjectResourceTest extends BaseIT {
                     .contentType(ContentType.JSON)
                     .body(readResource("/requests/projectDTORequest.json"))
                 .when()
-                    .put("/api/projects/a96e0a04-d20f-3096-bc64-dac2d639a577")
+                    .put("/api/projects/1000")
                 .then()
                     .statusCode(HttpStatus.OK.value());
-        assertEquals("Vel illum dolore.", projectRepository.findById(UUID.fromString("a96e0a04-d20f-3096-bc64-dac2d639a577")).orElseThrow().getProjectName());
+        assertEquals("Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.", projectRepository.findById(((long)1000)).orElseThrow().getName());
         assertEquals(2, projectRepository.count());
     }
 
     @Test
-    @Sql({"/data/userData.sql", "/data/projectData.sql"})
+    @Sql("/data/projectData.sql")
     void deleteProject_success() {
         RestAssured
                 .given()
                     .accept(ContentType.JSON)
                 .when()
-                    .delete("/api/projects/a96e0a04-d20f-3096-bc64-dac2d639a577")
+                    .delete("/api/projects/1000")
                 .then()
                     .statusCode(HttpStatus.NO_CONTENT.value());
         assertEquals(1, projectRepository.count());

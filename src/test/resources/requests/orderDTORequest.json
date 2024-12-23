@@ -1,5 +1,10 @@
 {
-  "numberCredits" : "At vero eos.",
+  "creditAmount" : 92,
+  "unit" : "Ut wisi enim.",
   "price" : "Et ea rebum.",
-  "total" : "Ut wisi enim."
+  "total" : "Ut wisi enim.",
+  "status" : "INIT",
+  "paymentBillFile" : 24,
+  "contractFile" : 75,
+  "certImages" : [ 93 ]
 }

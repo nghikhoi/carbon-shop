@@ -1,27 +1,17 @@
-DELETE FROM project;
+DELETE FROM favorite_projectses;
 
-DELETE FROM joiners;
+DELETE FROM projects;
 
-DELETE FROM "user";
+DELETE FROM orders;
 
-DELETE FROM "order";
+DELETE FROM companies;
 
-DELETE FROM order_status;
+DELETE FROM app_users;
 
-DELETE FROM payment;
+DELETE FROM file_documents;
 
-DELETE FROM contract;
+DELETE FROM company_reviews;
 
-DELETE FROM review_company;
+DELETE FROM project_reviews;
 
-DELETE FROM review_project;
-
-DELETE FROM staff;
-
-DELETE FROM chats;
-
-DELETE FROM messages;
-
-DELETE FROM chat_participants;
-
-DELETE FROM message_status;
+DELETE FROM questions;

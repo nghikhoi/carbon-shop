@@ -17,9 +17,24 @@ spring:
             non_contextual_creation: true
         id:
           new_generator_mappings: true
+  mail:
+    host: ${SMTP_HOST:email-smtp.eu-central-1.amazonaws.com}
+    username: ${SMTP_USERNAME:<<YOUR_USERNAME>>}
+    password: ${SMTP_PASSWORD:<<YOUR_PASSWORD>>}
+    port: 587
+    properties.mail.smtp:
+      auth: true
+      starttls:
+        enable: true
+        required: true
+      connectiontimeout: 15000
+      timeout: 45000
   docker:
     compose:
       lifecycle-management: start-only
+  content:
+    fs:
+      filesystem-root: /tmp
 error:
   handling:
     http-status-in-json-response: true
@@ -27,17 +42,25 @@ error:
     full-stacktrace-http-statuses: 5xx
     log-levels:
       5xx: ERROR
+    http-statuses:
+      org.springframework.security.authorization.AuthorizationDeniedException: unauthorized
     codes:
-      OrderOrderStatusIdUnique: ORDER_ORDER_STATUS_ID_UNIQUE
-      OrderPaymentIdUnique: ORDER_PAYMENT_ID_UNIQUE
-      OrderConstractIdUnique: ORDER_CONSTRACT_ID_UNIQUE
+      AppUserCompanyUnique: APP_USER_COMPANY_UNIQUE
+      PasswordResetRequestEmailExists: PASSWORD_RESET_REQUEST_EMAIL_EXISTS
+      RegistrationRequestEmailUnique: REGISTRATION_REQUEST_EMAIL_UNIQUE
 management:
   endpoints:
     web:
       exposure:
-        include: health,metrics,prometheus
+        include: '*'
   endpoint:
     health:
       show-details: always
 springdoc:
-  pathsToMatch: /, /api/**
+  pathsToMatch: /, /api/**, /authenticate, /passwordReset/**, /register
+app:
+  baseHost: ${BASE_HOST:http://localhost:null}
+  mail:
+    from: <<YOUR_EMAIL>>
+user:
+  secret: 00E3D352AA2F8F7163260ED36A5451AF

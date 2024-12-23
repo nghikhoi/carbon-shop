@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:17.0
+    image: postgres:17.2
     environment:
     - POSTGRES_DB=carbon-shop
     - POSTGRES_USER=postgres

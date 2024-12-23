@@ -3,25 +3,30 @@ package uit.carbon_shop.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import uit.carbon_shop.model.OrderStatus;
 
 
 @Entity
-@Table(name = "\"Order\"")
+@Table(name = "Orders")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
@@ -29,20 +34,13 @@ public class Order {
 
     @Id
     @Column(nullable = false, updatable = false)
-    @SequenceGenerator(
-            name = "primary_sequence",
-            sequenceName = "primary_sequence",
-            allocationSize = 1,
-            initialValue = 10000
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "primary_sequence"
-    )
     private Long orderId;
 
     @Column
-    private String numberCredits;
+    private Long creditAmount;
+
+    @Column
+    private String unit;
 
     @Column
     private String price;
@@ -50,36 +48,38 @@ public class Order {
     @Column
     private String total;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_status_id_id", unique = true)
-    private OrderStatus orderStatusId;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
+    @Column
+    private Long paymentBillFile;
+
+    @Column
+    private Long contractFile;
+
+    @Column(columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<Long> certImages;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id_id")
-    private User sellerId;
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buyer_id_id")
-    private User buyerId;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id_id", unique = true)
-    private Payment paymentId;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "constract_id_id", unique = true)
-    private Contract constractId;
+    @JoinColumn(name = "process_by_id")
+    private AppUser processBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "staff_id_id")
-    private Staff staffId;
+    @JoinColumn(name = "created_by_id")
+    private AppUser createdBy;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private OffsetDateTime dateCreated;
+    private OffsetDateTime createdAt;
 
     @LastModifiedDate
     @Column(nullable = false)
-    private OffsetDateTime lastUpdated;
+    private OffsetDateTime updatedAt;
 
 }

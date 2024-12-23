@@ -3,27 +3,33 @@ package uit.carbon_shop.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import uit.carbon_shop.model.ProjectStatus;
 
 
 @Entity
+@Table(name = "Projects")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
@@ -31,36 +37,37 @@ public class Project {
 
     @Id
     @Column(nullable = false, updatable = false)
-    @GeneratedValue
-    @UuidGenerator
-    private UUID projectId;
+    private Long projectId;
+
+    @Column(columnDefinition = "text")
+    private String name;
+
+    @Column(columnDefinition = "text")
+    private String address;
 
     @Column
-    private String projectName;
+    private String size;
 
     @Column
-    private String projectAddress;
+    private LocalDateTime timeStart;
 
     @Column
-    private String projectSize;
+    private LocalDateTime timeEnd;
 
     @Column
-    private String projectTimeStart;
+    private String produceCarbonRate;
 
     @Column
-    private String projectTimeEnd;
+    private String partner;
 
     @Column
-    private String projectRangeCarbon;
+    private String auditByOrg;
 
     @Column
-    private String organizationProvide;
+    private Long creditAmount;
 
     @Column
-    private String numberCarBonCredit;
-
-    @Column
-    private String creditTimeStart;
+    private String cert;
 
     @Column
     private String price;
@@ -68,36 +75,34 @@ public class Project {
     @Column
     private String methodPayment;
 
-    @Column
-    private String projectCredit;
-
-    @Column
-    private String creditDetail;
-
-    @Column
-    private String creditId;
-
     @Column(columnDefinition = "jsonb")
     @JdbcTypeCode(SqlTypes.JSON)
-    private List<String> image;
+    private List<Long> projectImages;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id_id", nullable = false)
-    private User userId;
+    @JoinColumn(name = "owner_company_id")
+    private Company ownerCompany;
 
-    @OneToMany(mappedBy = "projectId")
-    private Set<OrderStatus> orderStatusId;
+    @OneToMany(mappedBy = "project")
+    private Set<Order> orders;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_project_id_id")
-    private ReviewProject reviewProjectId;
+    @JoinColumn(name = "audit_by_id")
+    private AppUser auditBy;
+
+    @OneToMany(mappedBy = "project")
+    private Set<ProjectReview> projectReviews;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private OffsetDateTime dateCreated;
+    private OffsetDateTime createdAt;
 
     @LastModifiedDate
     @Column(nullable = false)
-    private OffsetDateTime lastUpdated;
+    private OffsetDateTime updatedAt;
 
 }

@@ -1,22 +1,14 @@
 package uit.carbon_shop.service;
 
-import java.util.List;
-import java.util.UUID;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import uit.carbon_shop.domain.Contract;
 import uit.carbon_shop.domain.Order;
-import uit.carbon_shop.domain.OrderStatus;
-import uit.carbon_shop.domain.Payment;
-import uit.carbon_shop.domain.Staff;
-import uit.carbon_shop.domain.User;
 import uit.carbon_shop.model.OrderDTO;
-import uit.carbon_shop.repos.ContractRepository;
+import uit.carbon_shop.repos.AppUserRepository;
 import uit.carbon_shop.repos.OrderRepository;
-import uit.carbon_shop.repos.OrderStatusRepository;
-import uit.carbon_shop.repos.PaymentRepository;
-import uit.carbon_shop.repos.StaffRepository;
-import uit.carbon_shop.repos.UserRepository;
+import uit.carbon_shop.repos.ProjectRepository;
 import uit.carbon_shop.util.NotFoundException;
 
 
@@ -24,103 +16,79 @@ import uit.carbon_shop.util.NotFoundException;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final OrderStatusRepository orderStatusRepository;
-    private final UserRepository userRepository;
-    private final PaymentRepository paymentRepository;
-    private final ContractRepository contractRepository;
-    private final StaffRepository staffRepository;
+    private final ProjectRepository projectRepository;
+    private final AppUserRepository appUserRepository;
+    private final OrderMapper orderMapper;
 
     public OrderService(final OrderRepository orderRepository,
-            final OrderStatusRepository orderStatusRepository, final UserRepository userRepository,
-            final PaymentRepository paymentRepository, final ContractRepository contractRepository,
-            final StaffRepository staffRepository) {
+            final ProjectRepository projectRepository, final AppUserRepository appUserRepository,
+            final OrderMapper orderMapper) {
         this.orderRepository = orderRepository;
-        this.orderStatusRepository = orderStatusRepository;
-        this.userRepository = userRepository;
-        this.paymentRepository = paymentRepository;
-        this.contractRepository = contractRepository;
-        this.staffRepository = staffRepository;
+        this.projectRepository = projectRepository;
+        this.appUserRepository = appUserRepository;
+        this.orderMapper = orderMapper;
     }
 
-    public List<OrderDTO> findAll() {
-        final List<Order> orders = orderRepository.findAll(Sort.by("orderId"));
-        return orders.stream()
-                .map(order -> mapToDTO(order, new OrderDTO()))
-                .toList();
+    public Page<OrderDTO> findAll(final String filter, final Pageable pageable) {
+        Page<Order> page;
+        if (filter != null) {
+            Long longFilter = null;
+            try {
+                longFilter = Long.parseLong(filter);
+            } catch (final NumberFormatException numberFormatException) {
+                // keep null - no parseable input
+            }
+            page = orderRepository.findAllByOrderId(longFilter, pageable);
+        } else {
+            page = orderRepository.findAll(pageable);
+        }
+        return new PageImpl<>(page.getContent()
+                .stream()
+                .map(order -> orderMapper.updateOrderDTO(order, new OrderDTO()))
+                .toList(),
+                pageable, page.getTotalElements());
+    }
+
+    public Page<OrderDTO> findAllCreatedBy(final Long userId, final Pageable pageable) {
+        final Page<Order> page = orderRepository.findByCreatedBy_UserId(userId, pageable);
+        return new PageImpl<>(page.getContent()
+                .stream()
+                .map(order -> orderMapper.updateOrderDTO(order, new OrderDTO()))
+                .toList(),
+                pageable, page.getTotalElements());
+    }
+
+    public Page<OrderDTO> findByOwnerCompany(final Long companyId, final Pageable pageable) {
+        final Page<Order> page = orderRepository.findByProject_OwnerCompany_Id(companyId, pageable);
+        return new PageImpl<>(page.getContent()
+                .stream()
+                .map(order -> orderMapper.updateOrderDTO(order, new OrderDTO()))
+                .toList(),
+                pageable, page.getTotalElements());
     }
 
     public OrderDTO get(final Long orderId) {
         return orderRepository.findById(orderId)
-                .map(order -> mapToDTO(order, new OrderDTO()))
+                .map(order -> orderMapper.updateOrderDTO(order, new OrderDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
     public Long create(final OrderDTO orderDTO) {
         final Order order = new Order();
-        mapToEntity(orderDTO, order);
+        order.setOrderId(orderDTO.getOrderId());
+        orderMapper.updateOrder(orderDTO, order, projectRepository, appUserRepository);
         return orderRepository.save(order).getOrderId();
     }
 
     public void update(final Long orderId, final OrderDTO orderDTO) {
         final Order order = orderRepository.findById(orderId)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(orderDTO, order);
+        orderMapper.updateOrder(orderDTO, order, projectRepository, appUserRepository);
         orderRepository.save(order);
     }
 
     public void delete(final Long orderId) {
         orderRepository.deleteById(orderId);
-    }
-
-    private OrderDTO mapToDTO(final Order order, final OrderDTO orderDTO) {
-        orderDTO.setOrderId(order.getOrderId());
-        orderDTO.setNumberCredits(order.getNumberCredits());
-        orderDTO.setPrice(order.getPrice());
-        orderDTO.setTotal(order.getTotal());
-        orderDTO.setOrderStatusId(order.getOrderStatusId() == null ? null : order.getOrderStatusId().getOrderStatusId());
-        orderDTO.setSellerId(order.getSellerId() == null ? null : order.getSellerId().getUserId());
-        orderDTO.setBuyerId(order.getBuyerId() == null ? null : order.getBuyerId().getUserId());
-        orderDTO.setPaymentId(order.getPaymentId() == null ? null : order.getPaymentId().getPaymentId());
-        orderDTO.setConstractId(order.getConstractId() == null ? null : order.getConstractId().getConstractId());
-        orderDTO.setStaffId(order.getStaffId() == null ? null : order.getStaffId().getStaffId());
-        return orderDTO;
-    }
-
-    private Order mapToEntity(final OrderDTO orderDTO, final Order order) {
-        order.setNumberCredits(orderDTO.getNumberCredits());
-        order.setPrice(orderDTO.getPrice());
-        order.setTotal(orderDTO.getTotal());
-        final OrderStatus orderStatusId = orderDTO.getOrderStatusId() == null ? null : orderStatusRepository.findById(orderDTO.getOrderStatusId())
-                .orElseThrow(() -> new NotFoundException("orderStatusId not found"));
-        order.setOrderStatusId(orderStatusId);
-        final User sellerId = orderDTO.getSellerId() == null ? null : userRepository.findById(orderDTO.getSellerId())
-                .orElseThrow(() -> new NotFoundException("sellerId not found"));
-        order.setSellerId(sellerId);
-        final User buyerId = orderDTO.getBuyerId() == null ? null : userRepository.findById(orderDTO.getBuyerId())
-                .orElseThrow(() -> new NotFoundException("buyerId not found"));
-        order.setBuyerId(buyerId);
-        final Payment paymentId = orderDTO.getPaymentId() == null ? null : paymentRepository.findById(orderDTO.getPaymentId())
-                .orElseThrow(() -> new NotFoundException("paymentId not found"));
-        order.setPaymentId(paymentId);
-        final Contract constractId = orderDTO.getConstractId() == null ? null : contractRepository.findById(orderDTO.getConstractId())
-                .orElseThrow(() -> new NotFoundException("constractId not found"));
-        order.setConstractId(constractId);
-        final Staff staffId = orderDTO.getStaffId() == null ? null : staffRepository.findById(orderDTO.getStaffId())
-                .orElseThrow(() -> new NotFoundException("staffId not found"));
-        order.setStaffId(staffId);
-        return order;
-    }
-
-    public boolean orderStatusIdExists(final Long orderStatusId) {
-        return orderRepository.existsByOrderStatusIdOrderStatusId(orderStatusId);
-    }
-
-    public boolean paymentIdExists(final UUID paymentId) {
-        return orderRepository.existsByPaymentIdPaymentId(paymentId);
-    }
-
-    public boolean constractIdExists(final Long constractId) {
-        return orderRepository.existsByConstractIdConstractId(constractId);
     }
 
 }
